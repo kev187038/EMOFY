@@ -18,7 +18,7 @@ class RegistrationFormController @Autowired()(userService: UserService) {
   @ResponseBody
   def registerUser(@ModelAttribute user: User): ResponseEntity[String] = {
     // Perform validation 
-    println("Received:"+ user + user.username + user.password + user.email)
+
     if (user.username.isEmpty || user.password.isEmpty || user.email.isEmpty) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data")
     }

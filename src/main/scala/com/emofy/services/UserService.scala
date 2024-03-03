@@ -12,5 +12,33 @@ class UserService @Autowired()(userRepository: UserRepository) {
     // For simplicity, you can directly save the user
     userRepository.save(user)
   }
+
+
+  def loginUser(providedParam: String, password: String): Option[User] = {
+    // Retrieve user from the database based on the provided username or email
+    val userOptF: Option[User] = userRepository.findByUsername(providedParam)
+
+    val userOpt: Option[User] = userOptF.orElse(userRepository.findByEmail(providedParam))
+  
+    
+
+    
+    userOpt match {
+      case Some(user) =>
+        // Check if the password matches
+        if (user.password == password) {
+          // Password matches, return the user
+          Some(user)
+        } else {
+          // Password doesn't match
+          None
+        }
+      case None =>
+        // User not found
+        None
+    }
+  }
+
+
 }
 

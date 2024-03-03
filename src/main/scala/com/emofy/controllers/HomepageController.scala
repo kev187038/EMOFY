@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 @RestController
 class HomepageController {
   @GetMapping(Array("/"))
-  def getHome(): String = "Welcome to  EMOFY! Please register! <p> Registrati, fallito: <a href='/register'>Register Now</a></p>"
+  def getHome(): String = "Welcome to  EMOFY! Please register! <p> Registrati, fallito: <a href='/register'>Register Now</a></p>" +
+    "If you are alread registered sign in: <a href='/login'>login!</a>"
 
 }
