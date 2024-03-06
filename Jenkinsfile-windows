@@ -18,7 +18,7 @@ pipeline {
         }
         stage('docker-run') {
             steps {
-                bat 'docker run -d -p 8080:8085 emofy-app'
+                bat 'docker run -d -p 8085:8080 emofy-app'
             }            
 
         }
