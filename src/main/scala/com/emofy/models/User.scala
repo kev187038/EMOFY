@@ -1,8 +1,9 @@
 package com.emofy.models
 
-import javax.persistence._
+import jakarta.persistence.{Entity,Table,Id,GeneratedValue,GenerationType}
 import java.io.Serializable
 import scala.beans.BeanProperty
+
 @Entity
 @Table(name = "users")
 class User extends Serializable{
@@ -15,17 +16,21 @@ class User extends Serializable{
   var username: String = _
 
   @BeanProperty
+  var role: String = _
+
+  @BeanProperty
   var email: String = _
 
   @BeanProperty
   var password: String = _
 
    //Builder (othewise it can't create new user)
-  def this(username: String, email: String, password: String) {
+  def this(username: String, email: String, password: String, role: String) {
     this()
     this.username = username
     this.email = email
     this.password = password
+    this.role = role
   }
 }
 
