@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('mvn-build') {
+            steps {
+                bat 'mvn clean install'
+            }
+        }
+        stage('copy') {
+            steps {
+                bat 'move target\\spring-scala-0.0.1-SNAPSHOT.jar .'
+            }
+        }
+        stage('docker-build') {
+            steps {
+                bat 'docker build -t emofy-app .'
+            }
+        }
+        stage('docker-run') {
+            steps {
+                bat 'docker run -d -p 8080:8085 emofy-app'
+            }            
+
+        }
+    }
+}

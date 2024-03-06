@@ -6535,3 +6535,149 @@ scala.meta.tokenizers.TokenizeException: <input>:2: error: unclosed comment
 2024.03.06 19:25:36 INFO  time: compiled spring-scala in 0.26s
 mar 06, 2024 7:29:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 492
+2024.03.06 23:34:03 INFO  Started: Metals version 1.2.2 in folders 'C:\Users\Pc\Desktop\MECELLONE\EMOFY' for client Visual Studio Code 1.87.0.
+23:34:08.644 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- Flyway Community Edition 9.22.3 by Redgate
+23:34:08.647 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- See release notes here: https://rd.gt/416ObMi
+23:34:08.648 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- 
+23:34:08.653 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
+23:34:08.653 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93 ...
+23:34:08.653 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
+23:34:08.653 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
+23:34:08.653 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93 ...
+23:34:08.654 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: jar:file:/C:/Users/Pc/AppData/Local/Coursier/cache/v1/https/repo1.maven.org/maven2/org/scalameta/metals_2.13/1.2.2/metals_2.13-1.2.2.jar!/db/migration
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__Create_tables.sql
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__Server_discovery.sql
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__Jar_symbols.sql
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V4__Fingerprints.sql
+23:34:08.658 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
+23:34:08.663 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+23:34:08.663 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__Jar_symbols.sql
+23:34:08.664 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__Create_tables.sql
+23:34:08.665 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__Server_discovery.sql
+23:34:08.665 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V4__Fingerprints.sql
+23:34:08.759 [pool-1-thread-1] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:h2:file:C:\Users\Pc\Desktop\MECELLONE\EMOFY\.metals\metals (H2 2.2)
+23:34:08.760 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: H2 JDBC Driver 2.2.224 (2023-09-17)
+23:34:08.760 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: false
+23:34:08.760 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
+23:34:08.761 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
+23:34:08.764 [pool-1-thread-1] WARN org.flywaydb.core.internal.database.base.Database -- Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+23:34:08.766 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
+23:34:08.766 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+23:34:08.774 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
+23:34:08.778 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+23:34:08.786 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__Jar_symbols.sql (filename: V3__Jar_symbols.sql)
+23:34:08.786 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+23:34:08.786 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__Create_tables.sql (filename: V1__Create_tables.sql)
+23:34:08.786 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__Server_discovery.sql (filename: V2__Server_discovery.sql)
+23:34:08.786 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__Fingerprints.sql (filename: V4__Fingerprints.sql)
+23:34:08.787 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__Jar_symbols.sql (filename: V3__Jar_symbols.sql)
+23:34:08.787 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+23:34:08.787 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__Create_tables.sql (filename: V1__Create_tables.sql)
+23:34:08.787 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__Server_discovery.sql (filename: V2__Server_discovery.sql)
+23:34:08.787 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__Fingerprints.sql (filename: V4__Fingerprints.sql)
+23:34:08.797 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.022s)
+23:34:08.799 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "PUBLIC"
+23:34:08.804 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "PUBLIC": 4
+23:34:08.810 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "PUBLIC" is up to date. No migration necessary.
+23:34:08.818 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 34 of 100M
+2024.03.06 23:34:09 INFO  Attempting to connect to the build server...
+2024.03.06 23:34:09 INFO  Bloop uses C:\Program Files\Java\jdk-17 defined at C:\Users\Pc\.bloop\bloop.json
+2024.03.06 23:34:17 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at C:\Users\Pc\Desktop\MECELLONE\EMOFY\.metals\bsp.trace.json or C:\Users\Pc\AppData\Local\scalameta\metals\cache\bsp.trace.json
+2024.03.06 23:34:17 INFO  time: Connected to build server in 9.16s
+2024.03.06 23:34:17 INFO  Connected to Build server: Bloop v1.5.15
+2024.03.06 23:34:17 INFO  time: Imported build in 0.33s
+2024.03.06 23:34:21 INFO  no build target found for C:\Users\Pc\Desktop\MECELLONE\EMOFY\src\main\scala\com\emofy\AppConfig.scala. Using presentation compiler with project's scala-library version: 3.3.1
+2024.03.06 23:34:28 INFO  no build target found for C:\Users\Pc\Desktop\MECELLONE\EMOFY\src\main\scala\com\emofy\AppConfig.scala. Using presentation compiler with project's scala-library version: 2.13.12
+mar 06, 2024 11:34:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9
+mar 06, 2024 11:34:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3
+mar 06, 2024 11:34:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+mar 06, 2024 11:34:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19
+mar 06, 2024 11:34:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20
+mar 06, 2024 11:34:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22
+mar 06, 2024 11:34:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 24
+mar 06, 2024 11:34:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27
+2024.03.06 23:34:30 INFO  compiling spring-scala (10 scala sources)
+mar 06, 2024 11:34:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 37
+2024.03.06 23:34:36 WARN  failed to generate semanticdb for C:\Users\Pc\Desktop\MECELLONE\EMOFY\src\main\scala\com\emofy\AppConfig.scala:
+java.nio.file.NoSuchFileException: C:\Users\Pc\Desktop\MECELLONE\EMOFY\src\main\scala\com\emofy\AppConfig.scala
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236)
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:380)
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:432)
+	at java.base/java.nio.file.Files.readAllBytes(Files.java:3288)
+	at scala.meta.internal.io.PlatformFileIO$.slurp(PlatformFileIO.scala:45)
+	at scala.meta.internal.io.FileIO$.slurp(FileIO.scala:24)
+	at scala.meta.inputs.Input$File.chars$lzycompute(Input.scala:52)
+	at scala.meta.inputs.Input$File.chars(Input.scala:52)
+	at scala.meta.internal.tokenizers.CharArrayReader.<init>(CharArrayReader.scala:27)
+	at scala.meta.internal.tokenizers.LegacyScanner.<init>(LegacyScanner.scala:17)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:22)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:17)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:17)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:332)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.parsers.ScannerTokens$.apply(ScannerTokens.scala:953)
+	at scala.meta.internal.parsers.ScalametaParser.<init>(ScalametaParser.scala:33)
+	at scala.meta.parsers.Parse$$anon$1.apply(Parse.scala:35)
+	at scala.meta.parsers.Api$XtensionParseDialectInput.parse(Api.scala:25)
+	at scala.meta.internal.semanticdb.scalac.ParseOps$XtensionCompilationUnitSource.toSource(ParseOps.scala:17)
+	at scala.meta.internal.semanticdb.scalac.TextDocumentOps$XtensionCompilationUnitDocument.toTextDocument(TextDocumentOps.scala:206)
+	at scala.meta.internal.semanticdb.scalac.TextDocumentOps$XtensionCompilationUnitDocument.toTextDocument(TextDocumentOps.scala:54)
+	at scala.meta.internal.semanticdb.scalac.SemanticdbPipeline$SemanticdbTyperComponent$ComputeSemanticdbPhase.saveSemanticdbForCompilationUnit(SemanticdbPipeline.scala:59)
+	at scala.meta.internal.semanticdb.scalac.SemanticdbPipeline$SemanticdbTyperComponent$ComputeSemanticdbPhase.apply(SemanticdbPipeline.scala:65)
+	at scala.tools.nsc.Global$GlobalPhase.applyPhase(Global.scala:481)
+	at scala.tools.nsc.Global$GlobalPhase.run(Global.scala:428)
+	at scala.meta.internal.semanticdb.scalac.SemanticdbPipeline$SemanticdbTyperComponent$ComputeSemanticdbPhase.run(SemanticdbPipeline.scala:75)
+	at scala.tools.nsc.Global$Run.compileUnitsInternal(Global.scala:1549)
+	at scala.tools.nsc.Global$Run.compileUnits(Global.scala:1533)
+	at scala.tools.nsc.Global$Run.compileSources(Global.scala:1525)
+	at scala.tools.nsc.Global$Run.compileFiles(Global.scala:1638)
+	at scala.tools.xsbt.CachedCompiler0.run(CompilerBridge.scala:176)
+	at scala.tools.xsbt.CachedCompiler0.run(CompilerBridge.scala:139)
+	at scala.tools.xsbt.CompilerBridge.run(CompilerBridge.scala:43)
+	at sbt.internal.inc.AnalyzingCompiler.compile(AnalyzingCompiler.scala:91)
+	at sbt.internal.inc.bloop.internal.BloopHighLevelCompiler.compileSources$1(BloopHighLevelCompiler.scala:133)
+	at sbt.internal.inc.bloop.internal.BloopHighLevelCompiler.$anonfun$compile$7(BloopHighLevelCompiler.scala:159)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at sbt.internal.inc.bloop.internal.BloopHighLevelCompiler.$anonfun$compile$1(BloopHighLevelCompiler.scala:71)
+	at bloop.tracing.NoopTracer$.trace(BraveTracer.scala:53)
+	at sbt.internal.inc.bloop.internal.BloopHighLevelCompiler.timed$1(BloopHighLevelCompiler.scala:70)
+	at sbt.internal.inc.bloop.internal.BloopHighLevelCompiler.$anonfun$compile$6(BloopHighLevelCompiler.scala:159)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at monix.eval.internal.TaskRunLoop$.startFull(TaskRunLoop.scala:81)
+	at monix.eval.internal.TaskRestartCallback.syncOnSuccess(TaskRestartCallback.scala:101)
+	at monix.eval.internal.TaskRestartCallback.onSuccess(TaskRestartCallback.scala:74)
+	at monix.eval.internal.TaskExecuteOn$AsyncRegister$$anon$1.run(TaskExecuteOn.scala:71)
+	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+2024.03.06 23:34:37 INFO  time: indexed workspace in 16s
+2024.03.06 23:34:42 WARN  1 deprecation
+2024.03.06 23:34:42 WARN  1 deprecation (since 2.13.2)
+2024.03.06 23:34:42 WARN  2 deprecations in total; re-run with -deprecation for details
+2024.03.06 23:34:42 INFO  time: compiled spring-scala in 11s
+2024.03.06 23:34:42 INFO  compiling spring-scala (10 scala sources)
+2024.03.06 23:34:44 INFO  time: compiled spring-scala in 1.86s
+2024.03.06 23:34:44 INFO  compiling spring-scala (10 scala sources)
+2024.03.06 23:34:45 INFO  time: compiled spring-scala in 0.93s
+2024.03.06 23:34:45 INFO  compiling spring-scala (10 scala sources)
+2024.03.06 23:34:45 INFO  time: compiled spring-scala in 0.68s
+mar 06, 2024 11:39:53 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report C:\Users\Pc\Desktop\MECELLONE\EMOFY\.metals\.reports\metals-full\2024-03-06\r_compiler-error_(spring-scala)_23-39-53-111.md

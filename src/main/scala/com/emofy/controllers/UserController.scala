@@ -9,6 +9,4 @@ import org.springframework.web.bind.annotation._
 @RestController
 @RequestMapping(Array("/users"))
 class UserController @Autowired()(userService: UserService) {
-
-  
 }
