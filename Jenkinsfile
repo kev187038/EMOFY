@@ -8,7 +8,7 @@ pipeline {
         }
         stage('copy') {
             steps {
-                sh 'cp target/spring-scala-0.0.1-SNAPSHOT.jar .'
+                sh 'cp target/emofy-0.0.1-SNAPSHOT.jar .'
             }
         }
         stage('docker-build') {

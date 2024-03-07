@@ -8,7 +8,7 @@ pipeline {
         }
         stage('copy') {
             steps {
-                bat 'move target\\spring-scala-0.0.1-SNAPSHOT.jar .'
+                bat 'move target\\emofy-0.0.1-SNAPSHOT.jar .'
             }
         }
         stage('docker-build') {
