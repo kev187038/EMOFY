@@ -6,16 +6,10 @@ pipeline {
                 bat 'mvn clean package'
             }
         }
-        stage('copy') {
-            steps {
-                bat 'move target\\emofy-0.0.1-SNAPSHOT.jar .'
-            }
-        }
         stage('docker-compose') {
             steps {
                 bat 'docker-compose up'
             }
         }
-
     }
 }
