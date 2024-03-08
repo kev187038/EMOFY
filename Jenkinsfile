@@ -20,9 +20,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
             
-            	sh 'kubectl apply -f ./deployment/emofy-db-container-deployment.yaml'
+            	sh 'kubectl apply -f /deployment/emofy-db-container-deployment.yaml'
                
-                sh 'kubectl apply -f ./deployment/emofy-login-service-deployment.yaml'
+                sh 'kubectl apply -f /deployment/emofy-login-service-deployment.yaml'
             }
         }
     }
