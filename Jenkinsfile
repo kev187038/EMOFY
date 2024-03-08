@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('mvn-build') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean package'
             }
         }
         stage('copy') {
@@ -11,16 +11,10 @@ pipeline {
                 sh 'cp target/emofy-0.0.1-SNAPSHOT.jar .'
             }
         }
-        stage('docker-build') {
+        stage('docker-compose') {
             steps {
-                sh 'docker build -t emofy-app .'
+                sh 'docker-compose up'
             }
-        }
-        stage('docker-run') {
-            steps {
-                sh 'docker run -d -p 8085:8080 emofy-app'
-            }            
-
         }
     }
 }
