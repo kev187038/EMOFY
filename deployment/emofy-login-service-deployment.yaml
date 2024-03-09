@@ -14,9 +14,9 @@ spec:
     spec:
       containers:
       - name: emofy-login-service
-        image: docker-spring-boot-postgres:latest
+        image: emofy-login-service:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8085
         env:
         - name: SPRING_DATASOURCE_URL
           value: jdbc:postgresql://emofy-db-container:5432/emofy_db
