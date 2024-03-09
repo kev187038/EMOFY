@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: emofy-login-service
-        image: emofy-login-service:latest
+        image: docker-spring-boot-postgres:latest
         ports:
         - containerPort: 8085
         env:
