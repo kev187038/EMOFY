@@ -31,7 +31,9 @@ spec:
               value: postgres
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: update
-          image: localhost:5000/docker-spring-boot-postgres:latest
+          image: docker-spring-boot-postgres:latest #Cambiata questa prima era 
+          #localhost:5000/docker...
+          imagePullPolicy: IfNotPresent
           name: emofy-login-service
           ports:
             - containerPort: 8080
