@@ -1,0 +1,4 @@
+FROM postgres:13.1-alpine
+COPY emofy_db.sql /docker-entrypoint-initdb.d/
+RUN chown postgres:postgres /docker-entrypoint-initdb.d/emofy_db.sql
+RUN chmod 777 /docker-entrypoint-initdb.d/emofy_db.sql
