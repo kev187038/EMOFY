@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  emofy-login-service:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: emofy-login-service
+    depends_on:
+      - emofy-db-container
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://emofy-db-container:5432/emofy_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - 8085:8080
+          
+  emofy-db-container:
+    image: 'postgres:13.1-alpine'
+    container_name: emofy-db-container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=emofy_db
+    volumes:
+      - ./emofy_db.sql:/docker-entrypoint-initdb.d/emofy_db.sql
+
+
