@@ -20,8 +20,10 @@ pipeline {
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
                         sh 'kubectl create -f service/emofy-login-service-service.yaml'
                         sleep 10
-                        sh 'screen -dmS port-forwarding kubectl port-forward emofy-login-service 8085:8085'
 
+                        withEnv(['JENKINS_NODE_COOKIE=dontkillMePlz']) {
+		            sh "nohup kubectl port-forward emofy-login-service 8085:8085 &"
+		        }
                     }
                 }
             }
