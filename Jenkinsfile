@@ -7,7 +7,7 @@ pipeline {
                     dir('login') {
                         sh 'kubectl create -f deployment/emofy-db-container-claim0-persistentvolumeclaim.yaml'
                         sh 'kubectl create -f deployment/emofy-db-container-deployment.yaml'
-                        sh 'kubectl create -f services/emofy-db-container-service.yaml'
+                        sh 'kubectl create -f service/emofy-db-container-service.yaml'
                     }
                 }
             }
@@ -18,7 +18,7 @@ pipeline {
                 script {
                     dir('login') {
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
-                        sh 'kubectl create -f services/emofy-login-service-service.yaml'
+                        sh 'kubectl create -f service/emofy-login-service-service.yaml'
                     }
                 }
             }

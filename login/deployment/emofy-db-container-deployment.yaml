@@ -26,7 +26,7 @@ spec:
       initContainers:
         - name: download-init-script
           image: alpine
-          command: ["wget", "-O", "/docker-entrypoint-initdb.d/init.sql", "https://raw.githubusercontent.com/kev187038/EMOFY/JavaInit/emofy_db.sql"]
+          command: ["wget", "-O", "/docker-entrypoint-initdb.d/init.sql", "https://raw.githubusercontent.com/kev187038/EMOFY/JavaInit/login/emofy_db.sql"]
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/
               name: emofy-db-container-claim0
