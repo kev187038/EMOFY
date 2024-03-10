@@ -38,3 +38,4 @@ spec:
             - name: POSTGRES_DB
               value: emofy_db
 
+
