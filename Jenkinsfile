@@ -20,7 +20,7 @@ pipeline {
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
                         sh 'kubectl create -f service/emofy-login-service-service.yaml'
                         sleep 10
-                        sh 'sh 'screen -dmS port-forwarding kubectl port-forward emofy-login-service 8085:8085'
+                        sh 'screen -dmS port-forwarding kubectl port-forward emofy-login-service 8085:8085'
 
                     }
                 }
