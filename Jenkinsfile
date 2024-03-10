@@ -22,7 +22,7 @@ pipeline {
                         sleep 10
 
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
-		            sh "nohup kubectl port-forward emofy-login-service 8085:8085 &"
+		            sh "nohup kubectl port-forward service/emofy-login-service 8085:8085 &"
 		        }
                     }
                 }
