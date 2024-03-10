@@ -1,15 +1,25 @@
 pipeline {
     agent any
     stages {
-        stage('mvn-build') {
-            steps {
-                bat 'mvn clean package'
+        stage('users db setup') {
+            dir('login'){
+                steps {
+                    bat 'kubectl create -f deployment\\emofy-db-container-claim0-persistentvolumeclaim.yaml'
+                    bat 'kubectl create -f deployment\\emofy-db-container-deployment.yaml'
+                    bat 'kubectl create -f services\\emofy-db-container-service.yaml'
+                }
             }
         }
-        stage('docker-compose') {
-            steps {
-                bat 'docker-compose up -d'
+
+        stage('deploy login service') {
+        
+             dir('login'){
+                steps {
+                    bat 'kubectl create -f deployment\\emofy-login-service-deployment.yaml'
+                    bat 'kubectl create -f services\\emofy-login-service-service.yaml'
+                }
             }
         }
+        
     }
 }

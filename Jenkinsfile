@@ -1,29 +1,25 @@
 pipeline {
     agent any
     stages {
-        stage('mvn-build') {
-            steps {
-                sh 'mvn clean package'
+        stage('users db setup') {
+            dir('login'){
+                steps {
+                    sh 'kubectl create -f deployment/emofy-db-container-claim0-persistentvolumeclaim.yaml'
+                    sh 'kubectl create -f deployment/emofy-db-container-deployment.yaml'
+                    sh 'kubectl create -f services/emofy-db-container-service.yaml'
+                }
             }
         }
 
-        stage('docker-compose') {
+        stage('deploy login service') {
         
-            steps {
-            
-                sh 'docker build -t emofy-login-service -f Dockerfile .'
-                
-                sh 'docker build -t emofy-db-container -f Dockerfile-db .'
+             dir('login'){
+                steps {
+                    sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
+                    sh 'kubectl create -f services/emofy-login-service-service.yaml'
+                }
             }
         }
         
-        stage('Deploy to Kubernetes') {
-            steps {
-            
-            	sh 'kubectl apply -f ./deployment/emofy-db-container-deployment.yaml'
-               
-                sh 'kubectl apply -f ./deployment/emofy-login-service-deployment.yaml'
-            }
-        }
     }
 }
