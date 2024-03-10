@@ -19,8 +19,8 @@ pipeline {
                     dir('login') {
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
                         sh 'kubectl create -f service/emofy-login-service-service.yaml'
-                        sleep 20
-                        sh 'kubectl port-forward service/emofy-login-service 8085:8085'
+                        sh 'kubectl port-forward service/emofy-login-service 8085:8085 &'
+                        sleep 10
                     }
                 }
             }
