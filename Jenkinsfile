@@ -20,9 +20,7 @@ pipeline {
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
                         sh 'kubectl create -f service/emofy-login-service-service.yaml'
                         sleep 10
-
-                       
-		            sh "BUILD_ID=dontKillMe nohup kubectl port-forward emofy-login-service 8085:8085 &"
+		        sh "JENKINS_NODE_COOKIE=dontKillMe nohup kubectl port-forward emofy-login-service 8085:8085 &"
 		        
                     }
                 }
