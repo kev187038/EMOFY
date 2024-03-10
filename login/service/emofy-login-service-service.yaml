@@ -10,7 +10,6 @@ metadata:
 spec:
   type: LoadBalancer  # Utilizzo del tipo di servizio LoadBalancer per rendere il servizio accessibile dall'esterno
   ports:
-    - name: "http"
       port: 8085
       targetPort: 8080
   selector:
