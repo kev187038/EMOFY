@@ -12,18 +12,21 @@ spec:
       labels:
         app: emofy-login-service
     spec:
+
       containers:
-      - name: emofy-login-service
-        image: docker-spring-boot-postgres:latest
-        ports:
-        - containerPort: 8085
-        env:
-        - name: SPRING_DATASOURCE_URL
-          value: jdbc:postgresql://emofy-db-container:5432/emofy_db
-        - name: SPRING_DATASOURCE_USERNAME
-          value: postgres
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: password
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: update
+        - name: emofy-login-service
+          image: docker-spring-boot-postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://emofy-db-container:5432/emofy_db
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+     
 
