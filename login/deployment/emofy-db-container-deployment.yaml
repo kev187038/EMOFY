@@ -31,6 +31,8 @@ spec:
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/
               name: emofy-db-container-claim0
+            - mountPath: ./
+              name: local-dir
       containers:
         - env:
             - name: POSTGRES_DB
