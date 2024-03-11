@@ -17,6 +17,7 @@ pipeline {
             steps {
                 script {
                     dir('login') {
+                        sh 'mvn clean install'
                         sh 'kubectl create -f deployment/emofy-login-service-deployment.yaml'
                         sh 'kubectl create -f service/emofy-login-service-service.yaml'
                         sleep 10

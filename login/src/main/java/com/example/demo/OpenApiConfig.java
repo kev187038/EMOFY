@@ -1,5 +1,5 @@
 package com.example.demo;
-/*
+/* OLD CONFIGURATION
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.spring.web.plugins.Docket;

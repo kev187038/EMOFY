@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -18,41 +17,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User createUser(User user) {
-        // Qui puoi aggiungere logica aggiuntiva come la validazione dei dati prima di salvare l'utente nel repository
-        return userRepository.save(user);
-    }
-
-    public User updateUser(Long id, User userDetails) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUsername(userDetails.getUsername());
-            user.setRole(userDetails.getRole());
-            user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
-            return userRepository.save(user);
-        } else {
-            return null; // Utente non trovato
-        }
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
     public void registerUser(User user) {
         // Perform any validation or business logic here
         // For simplicity, you can directly save the user
-        createUser(user);
+        userRepository.save(user);
     }
 
     public Optional<User> loginUser(String providedParam, String password) {
@@ -74,6 +42,5 @@ public class UserService {
         // Ritorna un Optional vuoto se l'autenticazione fallisce
         return Optional.empty();
     }
-
 
 }
