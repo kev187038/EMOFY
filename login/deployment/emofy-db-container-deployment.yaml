@@ -26,14 +26,10 @@ spec:
       initContainers:
         - name: download-init-script
           image: alpine
-          #command: ["wget", "-O", "/docker-entrypoint-initdb.d/init.sql", "https://raw.githubusercontent.com/kev187038/EMOFY/JavaInit/login/emofy_db.sql"]
-          command: ["/bin/sh", "-c", "cp /login/emofy_db.sql /docker-entrypoint-initdb.d/init.sql"]
+          command: ["wget", "-O", "/docker-entrypoint-initdb.d/init.sql", "https://raw.githubusercontent.com/kev187038/EMOFY/JavaInit/login/emofy_db.sql"]
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/
               name: emofy-db-container-claim0
-            - mountPath: /login
-              name: login
-
       containers:
         - env:
             - name: POSTGRES_DB
