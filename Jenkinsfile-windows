@@ -1,6 +1,17 @@
 pipeline {
     agent any
     stages {
+        stage('Start minikube') {
+            environment {
+                nodes = 1
+            }
+            steps {
+                script {
+                    sh "minikube start --nodes=${nodes}"
+                }
+            }
+        }
+
         stage('users db setup') {
             steps {
                 script {
@@ -20,6 +31,38 @@ pipeline {
                         bat 'mvn clean install'
                         bat 'kubectl create -f deployment\\emofy-login-service-deployment.yaml'
                         bat 'kubectl create -f service\\emofy-login-service-service.yaml'
+                    }
+                }
+            }
+        }
+
+        stage('Tunnel to localhost') {
+            environment {
+                time_to_sleep = 5
+                tries = 20
+            }
+            steps {
+                script {
+                    def podStatus = ''
+                    
+                    // Ciclo for con un numero fisso di iterazioni, ma se lo stato del pod è "Running", esci dal ciclo
+                    for (int i = 0; i < tries && podStatus != 'Running'; i++) {
+                        echo "Prova numero ${i + 1}"
+                        
+                        // Ottieni lo stato del pod
+                        podStatus = bat(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).trim()
+                        
+                        // Altrimenti, aspetta per un periodo di tempo specificato
+                        echo "Lo stato del pod non è 'Running', in attesa per ${time_to_sleep} secondi..."
+                        sleep time_to_sleep
+                    }
+                    
+                    // Se lo stato del pod non è "Running" dopo un numero di tentativi, emetti un avviso
+                    if (podStatus != 'Running') {
+                        error "Attenzione: il pod non è in uno stato 'Running' dopo ${tries} tentativi."
+                    } else {
+                        // Una volta che lo stato del pod è "Running", esegui il tunnel
+                        bat "nohup kubectl port-forward service/emofy-login-service 8085:8085 &"
                     }
                 }
             }
