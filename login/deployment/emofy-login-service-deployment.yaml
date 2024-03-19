@@ -21,6 +21,10 @@ spec:
         io.kompose.network/emofy-default: "true"
         io.kompose.service: emofy-login-service
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c", "until nslookup emofy-db-container; do sleep 2;"]
       containers:
         - env:
             - name: SPRING_DATASOURCE_PASSWORD
@@ -39,8 +43,3 @@ spec:
               hostPort: 8085
               protocol: TCP
       restartPolicy: Always
-      dependsOn:
-        - condition:
-            type: Complete
-          name: emofy-db-container
-
