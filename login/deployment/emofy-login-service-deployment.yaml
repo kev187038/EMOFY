@@ -39,3 +39,8 @@ spec:
               hostPort: 8085
               protocol: TCP
       restartPolicy: Always
+      dependsOn:
+        - condition:
+            type: Complete
+          name: emofy-db-container
+

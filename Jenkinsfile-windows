@@ -48,8 +48,7 @@ pipeline {
                     // Ciclo for con un numero fisso di iterazioni, ma se lo stato del pod è "Running", esci dal ciclo
                     for (int i = 0; i < tries.toInteger() && !is_pod_running; i++) {                        
                         // Ottieni lo stato del pod
-                        is_pod_running = bat(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running") && 
-                                         bat(script: "kubectl get pod -l io.kompose.service=emofy-db-container -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = bat(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         // Altrimenti, aspetta per un periodo di tempo specificato
                         sleep time_to_sleep
                     }
