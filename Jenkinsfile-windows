@@ -38,7 +38,7 @@ pipeline {
 
         stage('Tunnel to localhost') {
             environment {
-                time_to_sleep = 5
+                time_to_sleep = 10
                 tries = 20
             }
             steps {
@@ -59,6 +59,7 @@ pipeline {
                     // Se lo stato del pod non è "Running" dopo un numero di tentativi, emetti un avviso
                     if (is_pod_running) {
                         // Una volta che lo stato del pod è "Running", esegui il tunnel
+                        sleep 5
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
                             bat 'start /b kubectl port-forward service/emofy-login-service 8085:8085'
 		                }
