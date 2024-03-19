@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: wait-for-db
           image: busybox
-          command: ["sh", "-c", "until nslookup emofy-db-container; do sleep 2; done;"]
+          command: ['sh', '-c', 'until nc -z emofy-db-container 5432; do sleep 2; done;']
       containers:
         - env:
             - name: SPRING_DATASOURCE_PASSWORD
