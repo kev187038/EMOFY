@@ -38,7 +38,7 @@ pipeline {
 
         stage('Tunnel to localhost') {
             environment {
-                time_to_sleep = 5
+                time_to_sleep = 10
                 tries = 20
             }
             steps {
