@@ -43,18 +43,12 @@ pipeline {
             }
             steps {
                 script {
-                    is_pod_running = false
-                    
-                    // Ciclo for con un numero fisso di iterazioni, ma se lo stato del pod è "Running", esci dal ciclo
+                    is_pod_running = false                   
                     for (int i = 0; i < tries.toInteger() && !is_pod_running; i++) {                     
-                        sleep time_to_sleep
-                        // Ottieni lo stato del pod
                         is_pod_running = bat(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
-                    }
-                    
-                    // Se lo stato del pod non è "Running" dopo un numero di tentativi, emetti un avviso
+                        sleep time_to_sleep
+                    }                   
                     if (is_pod_running) {
-                        // Una volta che lo stato del pod è "Running", esegui il tunnel
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
                             bat 'start /b kubectl port-forward service/emofy-login-service 8085:8085'
 		                }
