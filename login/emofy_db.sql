@@ -29,7 +29,8 @@ CREATE TABLE public.users (
     username character varying(30),
     role character varying,
     password character varying NOT NULL,
-    email character varying
+    email character varying,
+    birth_date date
 );
 
 
@@ -68,8 +69,8 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, username, role, password, email) FROM stdin;
-1	sss	\N	aaaa	asfdf@ff.com
+COPY public.users (id, username, role, password, email, birth_date) FROM stdin;
+1	sss	\N	aaaa	asfdf@ff.com	\N
 \.
 
 

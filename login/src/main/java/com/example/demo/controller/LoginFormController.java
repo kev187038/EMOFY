@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class LoginFormController {
@@ -26,12 +27,12 @@ public class LoginFormController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<String> loginUser(@ModelAttribute User user) {
+    public ResponseEntity<String> loginUser(@ModelAttribute User user, HttpServletResponse response) {
         try {
             // User can be authenticated either by email or username
             String paramProvided = user.getUsername() != null ? user.getUsername() : user.getEmail();
     
-            Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword());
+            Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword(), response);
             if (authenticatedUser.isPresent()) {
                 // User authentication successful
                 return ResponseEntity.status(HttpStatus.CREATED).body("Hi, " + authenticatedUser.get().getUsername() + ". Welcome back!");

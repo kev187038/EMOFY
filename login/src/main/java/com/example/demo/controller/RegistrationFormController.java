@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class RegistrationFormController {
@@ -25,7 +26,7 @@ public class RegistrationFormController {
 
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<String> registerUser(@ModelAttribute User user) {
+    public ResponseEntity<String> registerUser(@ModelAttribute User user, HttpServletResponse response) {
         // Perform validation
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty() || user.getEmail().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
@@ -33,7 +34,8 @@ public class RegistrationFormController {
 
         // Invoke the service layer to register the user
         try {
-            userService.registerUser(user);
+            userService.registerUser(user, response);
+
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
         } catch (Exception e) {
             // Handle registration failure

@@ -1,0 +1,20 @@
+kubectl delete -f ./login/deployment/emofy-db-container-deployment.yaml
+kubectl delete -f ./login/service/emofy-db-container-service.yaml
+kubectl delete -f ./login/deployment/emofy-login-service-deployment.yaml
+kubectl delete -f ./login/service/emofy-login-service-service.yaml
+kubectl delete -f ./login/deployment/emofy-db-container-claim0-persistentvolumeclaim.yaml
+
+
+
+
+
+
+
+
+kubectl create -f deployment/emofy-db-container-claim0-persistentvolumeclaim.yaml
+kubectl create -f deployment/emofy-db-container-deployment.yaml
+kubectl create -f service/emofy-db-container-service.yaml
+mvn clean install
+kubectl create -f deployment/emofy-login-service-deployment.yaml
+kubectl create -f service/emofy-login-service-service.yaml
+kubectl port-forward service/emofy-login-service 8085:8085
