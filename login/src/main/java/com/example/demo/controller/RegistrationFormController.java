@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class RegistrationFormController {
@@ -35,6 +35,7 @@ public class RegistrationFormController {
         // Invoke the service layer to register the user
         try {
             userService.registerUser(user, response);
+            userService.loginUser(user.getUsername(), user.getPassword(), response);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
         } catch (Exception e) {

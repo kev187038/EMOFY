@@ -2,13 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class LoginFormController {
@@ -18,6 +19,7 @@ public class LoginFormController {
     @Autowired
     public LoginFormController(UserService userService) {
         this.userService = userService;
+
     }
 
     @GetMapping("/login")
@@ -29,7 +31,10 @@ public class LoginFormController {
     @ResponseBody
     public ResponseEntity<String> loginUser(@ModelAttribute User user, HttpServletResponse response) {
         try {
+            
             // User can be authenticated either by email or username
+       
+            
             String paramProvided = user.getUsername() != null ? user.getUsername() : user.getEmail();
     
             Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword(), response);
