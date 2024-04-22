@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emofy-image-storage-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emofy-image-storage
+  template:
+    metadata:
+      labels:
+        app: emofy-image-storage
+    spec:
+      containers:
+      - name: emofy-image-storage
+        image: siralex01/emofy-image-storage:latest
+        ports:
+        - containerPort: 8080
+        # Immagine Docker del tuo microservizio

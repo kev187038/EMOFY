@@ -1,4 +1,5 @@
 package com.example.eis.service;
+import com.example.eis.utils.ImageDetector;
 
 import io.minio.*;
 import io.minio.errors.MinioException;
@@ -27,8 +28,12 @@ public class FileService {
 
     @Value("${minio.bucketName}")
     private String bucketName;
-
     private final MinioClient minioClient;
+    
+    // for testing
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
 
     public FileService(MinioClient minioClient) {
         this.minioClient = minioClient;
@@ -48,22 +53,27 @@ public class FileService {
      * @throws IllegalArgumentException If the arguments are invalid.
      */
     public FileInfo uploadFile(MultipartFile file, String user, String label) throws IOException, MinioException, InvalidKeyException, NoSuchAlgorithmException, IllegalArgumentException {
-
+        String contentType = file.getContentType();
+        if (!contentType.startsWith("image") || !ImageDetector.isImage(file.getBytes()))
+            throw new IOException("Only images can be uploaded");
+            
         Map<String, String> metadata = new HashMap<String, String>();
         if (label != null)
             metadata.put("label", label);
         metadata.put("fileName", file.getOriginalFilename());
 
         String fileId = UUIDGenerator.getInstance().generateUUID();
-
+        
         minioClient.putObject(PutObjectArgs.builder()
                    .bucket(bucketName)
                    .object(user + "/" + fileId)
                    .stream(file.getInputStream(), file.getSize(), -1)
-                   .contentType(file.getContentType())
+                   .contentType(contentType)
                    .userMetadata(metadata)
                    .build());
-        return new FileInfo(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+        FileInfo fileInfo = label == null ? new FileInfo(fileId, file.getOriginalFilename(), file.getContentType(), file.getBytes(), file.getSize()) 
+                                          : new FileInfo(fileId, file.getOriginalFilename(), file.getContentType(), file.getBytes(), file.getSize(), label);
+        return fileInfo;
     }
 
     /**
@@ -82,8 +92,12 @@ public class FileService {
                         .build());
         byte[] fileBytes = objectResponse.readAllBytes();
         String contentType = objectResponse.headers().get("Content-Type");
-
-        return new FileInfo(fileName, contentType, fileBytes);
+        String label = objectResponse.headers().get("x-amz-meta-label");
+        Long fileSize = Long.parseLong(objectResponse.headers().get("Content-Length"));
+        String originalFileName = objectResponse.headers().get("x-amz-meta-filename");
+        FileInfo fileInfo = label == null ? new FileInfo(fileName, originalFileName, contentType, fileBytes, fileSize) 
+                                          : new FileInfo(fileName, originalFileName, contentType, fileBytes, fileSize, label);
+        return fileInfo;
     }
 
     /**
@@ -170,30 +184,63 @@ public class FileService {
                         .build());
     }
 
-    public void updateFile(String fileName, String userName, String newLabel) throws IOException, MinioException, InvalidKeyException, NoSuchAlgorithmException, IllegalArgumentException {
+    /**
+     * @param fileName
+     * @param userName
+     * @param newLabel
+     * @return 
+     * @throws IOException
+     * @throws MinioException
+     * @throws InvalidKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws IllegalArgumentException
+     */
+
+    // Aggiorna solo i metadati dell'oggetto sul server MinIO
+    public FileInfo updateFile(String fileName, String userName, String newLabel) throws IOException, MinioException, InvalidKeyException, NoSuchAlgorithmException, IllegalArgumentException {
+        
+        if (newLabel == null)
+            throw new IOException("You must set a label if you update a file");
+
         // Componi il nome completo dell'oggetto nel bucket
         String objectName = userName + "/" + fileName;
-    
-        // Ottieni i metadati dell'oggetto
-        StatObjectResponse objectStat = minioClient.statObject(StatObjectArgs.builder()
-                                                .bucket(bucketName)
-                                                .object(objectName)
-                                                .build());
-        Map<String, String> metadata = new HashMap<>(objectStat.userMetadata());
-    
+
+        GetObjectResponse objectResponse = minioClient.getObject(
+            GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .build());
+
+        byte[] fileBytes = objectResponse.readAllBytes();
+        String contentType = objectResponse.headers().get("Content-Type");
+        Long fileSize = Long.parseLong(objectResponse.headers().get("Content-Length"));
+        String originalFileName = objectResponse.headers().get("x-amz-meta-filename");
+
+
+        // Ottieni i metadati originali
+        Map<String, String> metadata = new HashMap<>();
+
+        metadata.put("fileName", originalFileName);
         // Aggiorna la label nei metadati
         metadata.put("label", newLabel);
-    
-        // Aggiorna solo i metadati dell'oggetto sul server MinIO
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .stream(new ByteArrayInputStream(new byte[0]), 0, -1) // Stream vuoto per mantenere il contenuto originale
-                        .contentType("application/octet-stream") // Tipo di contenuto necessario per il metodo putObject
-                        .userMetadata(metadata)
-                        .build());
+        
+        deleteFile(fileName, userName);
+
+        minioClient.putObject(PutObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .stream(new ByteArrayInputStream(fileBytes), fileSize, -1)
+                .contentType(contentType)
+                .userMetadata(metadata)
+                .build());
+        
+        return new FileInfo(fileName, originalFileName, contentType, fileBytes, fileSize, newLabel);        
+        
     }
-                        
+
+
+                    
+    
+                            
     
 }

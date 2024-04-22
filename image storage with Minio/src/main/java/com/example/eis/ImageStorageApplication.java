@@ -6,10 +6,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import com.example.eis.minio.MinioProperties;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 
 
 @SpringBootApplication
 @EnableConfigurationProperties(MinioProperties.class)
+@OpenAPIDefinition
 public class ImageStorageApplication {
 
     public static void main(String[] args) {

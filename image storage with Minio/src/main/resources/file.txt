@@ -1,0 +1,15 @@
+<!-- servirà per mandare i log a logstash -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Logstash name="logstash" host="your-logstash-host" port="your-logstash-port">
+            <JsonLayout />
+        </Logstash>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="logstash" />
+        </Root>
+    </Loggers>
+</Configuration>
