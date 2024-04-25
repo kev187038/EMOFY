@@ -15,6 +15,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -29,12 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && validateToken(token)) {
             Claims claims = extractClaimsFromToken(token);
             Long userId = Long.parseLong(claims.getSubject());
-            
-            UserDetails userDetails = new CustomUserDetails(userId);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println(authentication);
+            String source = claims.get("source", String.class);
+
+            if (source.equals("login")) {
+                UserDetails userDetails = new CustomUserDetails(userId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
         }
         
         filterChain.doFilter(request, response);
@@ -54,16 +58,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                .setSigningKey(jwtSecret.getBytes())
-                .build()
-                .parseClaimsJws(token);
-            return true;
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(jwtSecret.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            
+            Date expiration = claims.getExpiration();
+            return !expiration.before(new Date()); // Returns true if the expiration date is in the future
         } catch (Exception e) {
-            return false;
+            return false; // Token validation failed
         }
     }
-
+    
     private Claims extractClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(jwtSecret.getBytes())
