@@ -4,6 +4,7 @@ package com.example.eis.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperties;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,17 +51,16 @@ public class FileController {
             description = "The image could not be uploaded",
             content = {@Content(mediaType = "text/plain")})
     })
-
     @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = "multipart/form-data",
-                    schema = @Schema(type = "string", format = "binary"))) MultipartFile file,
+            @RequestPart("file") MultipartFile file,
             @RequestParam("user") String user,
             @RequestParam(value = "label", required = false) String label) {
         try {
+            System.out.println(file);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
             logger.info("Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
-            return ResponseEntity.ok("File uploaded successfully!" + fileInfo);
+            return ResponseEntity.ok("File uploaded successfully!");
         } catch (Exception e) {
             logger.error("User {} recieved error: {}", user, e.getMessage());
 
@@ -121,7 +121,7 @@ public class FileController {
     }
 
     @Operation(summary = "Update an image")
-    @PutMapping("/images/{userName}/{fileName}")
+    @PutMapping("/images/{user}/{fileName}")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
         description = "The requested image is updated",
@@ -130,13 +130,13 @@ public class FileController {
         description = "The image could not be updated",
         content = {@Content(mediaType = "text/plain")})
     })
-    public ResponseEntity<String> deleteFile(@RequestParam("label") String label, 
+    public ResponseEntity<String> updateFile(@RequestParam("label") String label, 
                                              @PathVariable String fileName, 
                                              @PathVariable String user) {
         try {
             FileInfo fileInfo = fileService.updateFile(fileName, user, label);
             logger.info("Image updated successfully by user {}: {}", user, fileInfo.getObjectName());
-            return ResponseEntity.ok("File updated successfully!" + fileInfo);
+            return ResponseEntity.ok("File updated successfully!");
         } catch (Exception e) {
             logger.error("User {} while updating {} recieved error: {}", user, fileName, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating file: " + e.getMessage());

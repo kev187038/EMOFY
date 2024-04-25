@@ -12,6 +12,11 @@ spec:
       labels:
         app: emofy-image-storage
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z minio-service 9000; do sleep 2; done;']
+
       containers:
       - name: emofy-image-storage
         image: siralex01/emofy-image-storage:latest

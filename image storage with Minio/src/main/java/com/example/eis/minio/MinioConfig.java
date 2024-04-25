@@ -31,9 +31,9 @@ public class MinioConfig {
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
             if (!found) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
-                System.out.println("Bucket" + bucketName + "created successfully.");
+                System.out.println("Bucket " + bucketName + " created successfully.");
             } else {
-                System.out.println("Bucket" + bucketName + "already exists.");
+                System.out.println("Bucket " + bucketName + " already exists.");
             }
         } catch (MinioException | IOException | InvalidKeyException | NoSuchAlgorithmException e) {
             System.out.println("Error occurred: " + e);

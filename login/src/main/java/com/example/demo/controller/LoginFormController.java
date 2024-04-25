@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
+import com.example.demo.services.JwtTokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,7 @@ public class LoginFormController {
             Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword(), response);
             if (authenticatedUser.isPresent()) {
                 // User authentication successful
+                response.sendRedirect("http://localhost:8081");
                 return ResponseEntity.status(HttpStatus.CREATED).body("Hi, " + authenticatedUser.get().getUsername() + ". Welcome back!");
             } else {
                 // User authentication failed
