@@ -39,11 +39,9 @@ public class SecurityConfig {
                 .permitAll()
             .and()
             .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .and()
-            .csrf()
-                .disable(); // Disabilita CSRF per ora, puoi attivarlo dopo averlo configurato correttamente
-            System.out.println(SecurityContextHolder.getContext().getAuthentication());
+                .authenticationEntryPoint(customAuthenticationEntryPoint);
+
             return http.build();
+            
     }
 }

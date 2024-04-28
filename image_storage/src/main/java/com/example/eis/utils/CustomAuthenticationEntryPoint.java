@@ -14,6 +14,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         // Redirect to your custom login page
-        response.sendRedirect("http://localhost:8085");
+        response.sendRedirect("http://emofy-login-service:8085"/*"http://localhost:8085" */);
     }
 }

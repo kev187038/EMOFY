@@ -57,7 +57,7 @@ public class FileController {
             @RequestParam("user") String user,
             @RequestParam(value = "label", required = false) String label) {
         try {
-            System.out.println(file);
+            System.out.println("request " + file+ " " + user);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
             logger.info("Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
             return ResponseEntity.ok("File uploaded successfully!");

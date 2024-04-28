@@ -41,7 +41,7 @@ public class LoginFormController {
             Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword(), response);
             if (authenticatedUser.isPresent()) {
                 // User authentication successful
-                response.sendRedirect("http://localhost:8081");
+                response.sendRedirect("http://emofy-image-storage:8081"/*"http://localhost:8081" */);
                 return ResponseEntity.status(HttpStatus.CREATED).body("Hi, " + authenticatedUser.get().getUsername() + ". Welcome back!");
             } else {
                 // User authentication failed
