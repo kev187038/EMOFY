@@ -1,2 +1,2 @@
-cd ./login && ./kilALL.bat && cd ..
-cd ./image_storage && ./deleteall.bat && cd ..
+./login/deleteall.bat
+./image_storage/deleteall.bat
