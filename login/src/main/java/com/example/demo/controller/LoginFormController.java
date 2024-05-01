@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
-import com.example.demo.services.JwtTokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
