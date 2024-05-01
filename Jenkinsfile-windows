@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('users db setup') {
+        stage('deploy login service') {
             steps {
                 script {
                     dir('login') {
@@ -26,15 +26,15 @@ pipeline {
             }
         }
 
-        stage('deploy login service') {
+        stage('deploy image storage') {
             steps {
                 script {
                     dir('image_storage') {
-                        bat 'kubectl create -f .login\\deployment\\emofy-db-container-claim0-persistentvolumeclaim.yaml'
-                        bat 'kubectl create -f .login\\deployment\\emofy-db-container-deployment.yaml'
-                        bat 'kubectl create -f .login\\service\\emofy-db-container-service.yaml'
-                        bat 'kubectl create -f .login\\deployment\\emofy-login-service-deployment.yaml'
-                        bat 'kubectl create -f .login\\service\\emofy-login-service-service.yaml'
+                        bat 'kubectl create -f deployment\\minio_pvc_deployment.yaml'
+                        bat 'kubectl create -f deployment\\minio_deployment.yaml'
+                        bat 'kubectl create -f service\\minio_service.yaml'
+                        bat 'kubectl create -f deployment\\image_storage_deployment.yaml'
+                        bat 'kubectl create -f service\\image_storage_service.yaml'
                     }
                 }
             }
