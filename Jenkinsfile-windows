@@ -19,6 +19,8 @@ pipeline {
                         bat 'kubectl create -f deployment\\emofy-db-container-claim0-persistentvolumeclaim.yaml'
                         bat 'kubectl create -f deployment\\emofy-db-container-deployment.yaml'
                         bat 'kubectl create -f service\\emofy-db-container-service.yaml'
+                        bat 'kubectl create -f deployment\\emofy-login-service-deployment.yaml'
+                        bat 'kubectl create -f service\\emofy-login-service-service.yaml'
                     }
                 }
             }
@@ -27,10 +29,12 @@ pipeline {
         stage('deploy login service') {
             steps {
                 script {
-                    dir('login') {
-                        bat 'mvn clean install'
-                        bat 'kubectl create -f deployment\\emofy-login-service-deployment.yaml'
-                        bat 'kubectl create -f service\\emofy-login-service-service.yaml'
+                    dir('image_storage') {
+                        bat 'kubectl create -f .login\\deployment\\emofy-db-container-claim0-persistentvolumeclaim.yaml'
+                        bat 'kubectl create -f .login\\deployment\\emofy-db-container-deployment.yaml'
+                        bat 'kubectl create -f .login\\service\\emofy-db-container-service.yaml'
+                        bat 'kubectl create -f .login\\deployment\\emofy-login-service-deployment.yaml'
+                        bat 'kubectl create -f .login\\service\\emofy-login-service-service.yaml'
                     }
                 }
             }
@@ -46,11 +50,14 @@ pipeline {
                     is_pod_running = false                   
                     for (int i = 0; i < tries.toInteger() && !is_pod_running; i++) {                     
                         is_pod_running = bat(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && bat(script: "kubectl get pod -l app=emofy-image-storage -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+
                         sleep time_to_sleep
                     }                   
                     if (is_pod_running) {
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
-                            bat 'start /b kubectl port-forward service/emofy-login-service 8085:8085'
+                            bat 'start \\b kubectl port-forward service\\emofy-login-service 8085:8085'
+                            bat 'start \\b kubectl port-forward service\\emofy-login-service 8081:8081'
 		                }
                     } 
                     else {

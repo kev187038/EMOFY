@@ -1,2 +1,2 @@
-./login/deleteall.bat
-./image_storage/deleteall.bat
+call ./login/deleteall.bat
+call ./image_storage/deleteall.bat

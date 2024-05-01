@@ -1,2 +1,2 @@
-./login/createall.bat 
-./image_storage/createall.bat
+call ./login/createall.bat 
+call ./image_storage/createall.bat
