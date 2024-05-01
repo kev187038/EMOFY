@@ -55,10 +55,10 @@ pipeline {
                         sleep time_to_sleep
                     }                   
                     if (is_pod_running) {
-                        sleep time_to_sleep
+                        sleep time_to_sleep*10
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
-                            bat 'start \\b cmd /c "kubectl port-forward service\\emofy-login-service 8085:8085 --wait"'
-                            bat 'start \\b cmd /c "kubectl port-forward service\\emofy-image-storage 8081:8081 --wait"'
+                            bat 'start \\b kubectl port-forward service\\emofy-login-service 8085:8085'
+                            bat 'start \\b kubectl port-forward service\\emofy-image-storage 8081:8081'
 		                }
                     } 
                     else {
