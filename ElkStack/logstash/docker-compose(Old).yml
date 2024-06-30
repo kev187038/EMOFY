@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: elasticsearch:8.14.1  # kibana logstash and elasticseach need all same version
+    container_name: elasticsearch
+    #restart: always
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data/
+    environment:
+      - "ES_JAVA_OPTS=-Xmx256m -Xms256m" # restrict mem usage
+      - "discovery.type=single-node" # run single node cluster with elastic search
+      - "ELASTIC_PASSWORD=elastic123"
+      - "KIBANA_SYSTEM_PASSWORD=kibana123"
+    ports:
+      - '9200:9200' # ports to open for elastic search
+      - '9300:9300'
+    networks:
+      - elk
+      
+  logstash:
+    image: logstash:8.14.1
+    container_name: logstash
+    #restart: always
+    volumes:
+      - ./logstash/:/logstash_dir
+    command: logstash -f /logstash_dir/logstash.conf # use this command at startup to use this config file
+    depends_on:
+      - elasticsearch # some things will be mapped onto elasticsearch container to send data to elasticsearch
+    ports:
+      - '9600:9600'
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m" # set mem usage
+    networks:
+      - elk # same network for all of them
+  
+  kibana:
+    image: kibana:8.14.1
+    container_name: kibana
+    #restart: always
+    ports:
+      - '5601:5601'
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200" # env variable important to connect to elasticsearch
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+volumes:
+  elastic_data: {} 
+
+networks:
+  elk:
+
