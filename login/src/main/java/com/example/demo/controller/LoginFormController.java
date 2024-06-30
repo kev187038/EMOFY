@@ -2,9 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
-import com.example.demo.services.JwtTokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class LoginFormController {
 
     private final UserService userService;
+    @Value("${emofy.image.storage.url}")
+    private String imageStorageUrl;
+
 
     @Autowired
     public LoginFormController(UserService userService) {
@@ -41,7 +44,8 @@ public class LoginFormController {
             Optional<User> authenticatedUser = userService.loginUser(paramProvided, user.getPassword(), response);
             if (authenticatedUser.isPresent()) {
                 // User authentication successful
-                response.sendRedirect("http://localhost:8081");
+                
+                response.sendRedirect(imageStorageUrl);
                 return ResponseEntity.status(HttpStatus.CREATED).body("Hi, " + authenticatedUser.get().getUsername() + ". Welcome back!");
             } else {
                 // User authentication failed

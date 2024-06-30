@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+    <h1>File Upload</h1>
+    <form id="uploadForm" enctype="multipart/form-data" th:action="@{'/api/images/' + ${userId}}" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <input type="file" name="file">
+        <!-- Assicurati che il valore sia corretto -->
+        <!-- Non è necessario includere il token CSRF, a meno che tu non voglia aggiungere esplicitamente la protezione CSRF al frontend -->
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

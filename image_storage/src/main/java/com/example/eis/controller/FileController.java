@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,13 +53,21 @@ public class FileController {
             description = "The image could not be uploaded",
             content = {@Content(mediaType = "text/plain")})
     })
-    @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/images/{user}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
             @RequestPart("file") MultipartFile file,
-            @RequestParam("user") String user,
+            @PathVariable String user,
             @RequestParam(value = "label", required = false) String label) {
+        
+        // Ottieni l'utente autenticato dall'oggetto SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+        if (!authenticatedUser.equals(user)) {
+            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to perform this action");
+        }
         try {
-            System.out.println(file);
+            System.out.println("request " + file+ " " + user);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
             logger.info("Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
             return ResponseEntity.ok("File uploaded successfully!");
@@ -80,6 +90,12 @@ public class FileController {
     @GetMapping(value = "/images/{user}/{fileName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName,
                                                @PathVariable String user) {
+                                                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+        if (!authenticatedUser.equals(user)) {
+            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         try {
             FileInfo fileInfo = fileService.downloadFile(fileName, user);
             logger.info("Image retrieved successfully by user {}: {}", user, fileInfo.getObjectName());
@@ -107,9 +123,20 @@ public class FileController {
                                              @RequestParam("user") String user,
                                              @PathVariable String fileName, 
                                              @PathVariable String userName) {
+        
+        // Ottieni l'utente autenticato dall'oggetto SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+
+        // Verifica se l'utente autenticato corrisponde all'utente specificato nella richiesta
+        if (!authenticatedUser.equals(user)) {
+            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to perform this action");
+        }
         //check correspondance between path and request params (protect from wrong deletions)
         if (!file.equals(fileName) || !user.equals(userName))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unacceptable request");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unacceptable request");
+        
         try {
             fileService.deleteFile(file, user);
             logger.info("Image deleted successfully by user {}: {}", user, fileName);
@@ -133,6 +160,15 @@ public class FileController {
     public ResponseEntity<String> updateFile(@RequestParam("label") String label, 
                                              @PathVariable String fileName, 
                                              @PathVariable String user) {
+        // Ottieni l'utente autenticato dall'oggetto SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+
+        // Verifica se l'utente autenticato corrisponde all'utente specificato nella richiesta
+        if (!authenticatedUser.equals(user)) {
+            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to perform this action");
+        }
         try {
             FileInfo fileInfo = fileService.updateFile(fileName, user, label);
             logger.info("Image updated successfully by user {}: {}", user, fileInfo.getObjectName());
@@ -175,6 +211,14 @@ public class FileController {
         content = {@Content(mediaType = "text/plain")})
     })
     public ResponseEntity<String> getUserImages(@PathVariable String user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUser = authentication.getName();
+
+        // Verifica se l'utente autenticato corrisponde all'utente specificato nella richiesta
+        if (!authenticatedUser.equals(user)) {
+            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to perform this action");
+        }
         try {
             Map<String, Map<String, String>> filesWithMetadata = fileService.getUserImages(user);
             logger.info("User {} retrieved all the images", user);
