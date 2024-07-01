@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emofy - Analyze Your Images</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <nav class="container d-flex justify-content-between align-items-center">
+            <div>
+                <a class="nav-link text-white d-inline" href="/">Home</a>
+                <a class="nav-link text-white d-inline" href="/about">About Us</a>
+            </div>
+            <button id="help-button" class="btn btn-outline-light">Need Help?</button>
+        </nav>
+    </header>
+    <div class="container-fluid" id="main-container">
+        <aside class="p-3" id="sidebar">
+            <h2>
+                <a href="#image-list" class="btn btn-success btn-lg btn-block">Your Images</a>
+            </h2>
+            <ul id="image-list" class="list-group">
+                <!-- Le immagini caricate saranno inserite qui -->
+            </ul>
+        </aside>
+        <main class="d-flex justify-content-center align-items-center" id="main-content">
+            <div class="text-center">
+                <div class="mb-4">
+                    <button id="upload-button" class="btn btn-primary btn-lg">Upload now to get your results!</button>
+                    <input type="file" id="file-input" style="display:none;" multiple>
+                </div>
+                <div id="drop-area" class="border p-5 bg-light">
+                    <p class="lead">Drag and drop image</p>
+                    <button id="search-button" class="btn btn-info">Search on local</button>
+                </div>
+            </div>
+        </main>
+        <div class="p-3" id="filters"></div>
+    </div>
+    <aside class="container my-3">
+        <div class="input-group">
+            <input type="text" id="search-input" class="form-control" placeholder="Search for your images">
+        </div>
+    </aside>
+
+    <!-- Oppure passa l'ID utente direttamente a JavaScript -->
+    <script th:inline="javascript">
+        var userId = /*[[${userId}]]*/ 'defaultUserId';
+        console.log("User ID from Thymeleaf: ", userId, typeof(userId));
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

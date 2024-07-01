@@ -25,7 +25,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .anyRequest().authenticated()
+            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Consenti l'accesso a risorse statiche senza autenticazione
+            .anyRequest().authenticated()
                 .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Aggiungi il filtro JwtAuthenticationFilter prima di UsernamePasswordAuthenticationFilter
             .logout()

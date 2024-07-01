@@ -14,6 +14,6 @@ public class ServiceController {
         String userId = (String) httpServletRequest.getAttribute("userId");
         model.addAttribute("userId", userId);
 
-        return "home";
+        return "index";
     }
 }
