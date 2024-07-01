@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
+        env:
+        - name: cluster.name
+          value: "docker-cluster"
+        - name: discovery.type
+          value: "single-node"
+        - name: ES_JAVA_OPTS
+          value: "-Xmx256m -Xms256m"
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.license.self_generated.type
+          value: "trial"
+        - name: xpack.security.http.ssl.enabled
+          value: "false"
+        - name: ELASTIC_PASSWORD
+          value: "elastic123"
+        - name: KIBANA_SYSTEM_PASSWORD
+          value: "kibana123"
+        ports:
+        - containerPort: 9200
+        - containerPort: 9300
+        volumeMounts:
+        - name: elastic-data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: elastic-data
+        emptyDir: {}

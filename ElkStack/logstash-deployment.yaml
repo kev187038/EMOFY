@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      initContainers:
+        - name: init-logstash
+          image: curlimages/curl:latest
+          command:  
+            - "/bin/sh"
+            - "-c"
+            - |
+              mkdir -p /logstash_dir
+              curl -L -o /logstash_dir/logstash.conf https://raw.githubusercontent.com/kev187038/EMOFY/master/ElkStack/logstash/logstash.conf
+          volumeMounts:
+            - name: logstash-config
+              mountPath: /logstash_dir
+         
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:8.14.1
+          command:
+            - "logstash"
+            - "-f"
+            - "/logstash_dir/logstash.conf"
+          env:
+            - name: LS_JAVA_OPTS
+              value: "-Xmx256m -Xms256m"
+          volumeMounts:
+            - name: logstash-config
+              mountPath: /logstash_dir
+      volumes:
+        - name: logstash-config
+          emptyDir: {}

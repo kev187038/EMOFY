@@ -4,7 +4,12 @@ kubectl delete -f ./login/deployment/emofy-login-service-deployment.yaml
 kubectl delete -f ./login/service/emofy-login-service-service.yaml
 kubectl delete -f ./login/deployment/emofy-db-container-claim0-persistentvolumeclaim.yaml
 
-
+kubectl delete -f ./ElkStack/elasticsearch-deployment.yaml
+kubectl delete -f ./ElkStack/kibana-deployment.yaml
+kubectl delete -f ./ElkStack/logstash-deployment.yaml
+kubectl delete -f ./ElkStack/kibana-service.yaml
+kubectl delete -f ./ElkStack/elasticsearch-service.yaml
+kubectl delete -f ./ElkStack/logstash-service.yaml
 
 
 
@@ -18,3 +23,12 @@ mvn clean install
 kubectl create -f deployment/emofy-login-service-deployment.yaml
 kubectl create -f service/emofy-login-service-service.yaml
 kubectl port-forward service/emofy-login-service 8085:8085
+
+kubectl apply -f ./ElkStack/elasticsearch-deployment.yaml
+kubectl apply -f ./ElkStack/kibana-deployment.yaml
+kubectl apply -f ./ElkStack/logstash-deployment.yaml
+kubectl apply -f ./ElkStack/elasticsearch-service.yaml
+kubectl apply -f ./ElkStack/kibana-service.yaml
+kubectl apply -f ./ElkStack/logstash-service.yaml
+kubectl port-forward service/kibana 5601:5601
+kubectl port-forward service/logstash 5044:5044
