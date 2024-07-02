@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.media.SchemaProperties;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,7 @@ import java.util.Map;
 @Tag(name = "Image Management")
 public class FileController {
 
-    private static final Logger logger = LogManager.getLogger(FileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Value("${minio.bucketName}")
     private String bucketName;
@@ -69,10 +67,10 @@ public class FileController {
         try {
             System.out.println("request " + file+ " " + user);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
-            logger.info("Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
+            logger.info("[EMOFY] Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
             return ResponseEntity.ok("File uploaded successfully!");
         } catch (Exception e) {
-            logger.error("User {} recieved error: {}", user, e.getMessage());
+            logger.error("[EMOFY] User {} recieved error: {}", user, e.getMessage());
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
         }
@@ -98,13 +96,13 @@ public class FileController {
         }
         try {
             FileInfo fileInfo = fileService.downloadFile(fileName, user);
-            logger.info("Image retrieved successfully by user {}: {}", user, fileInfo.getObjectName());
+            logger.info("[EMOFY] Image retrieved successfully by user {}: {}", user, fileInfo.getObjectName());
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(fileInfo.getContentType()))
                     .body(fileInfo.getFileBytes());
             
         } catch (Exception e) {
-            logger.error("User {} while retrieving {} recieved error: {}", user, fileName, e.getMessage());
+            logger.error("[EMOFY] User {} while retrieving {} recieved error: {}", user, fileName, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(("Error fetching file: " + e.getMessage()).getBytes());
         }
     }
@@ -139,10 +137,10 @@ public class FileController {
         
         try {
             fileService.deleteFile(file, user);
-            logger.info("Image deleted successfully by user {}: {}", user, fileName);
+            logger.info("[EMOFY] Image deleted successfully by user {}: {}", user, fileName);
             return ResponseEntity.ok("File deleted successfully!");
         } catch (Exception e) {
-            logger.error("User {} while deleting {} recieved error: {}", user, fileName, e.getMessage());
+            logger.error("[EMOFY] User {} while deleting {} recieved error: {}", user, fileName, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting file: " + e.getMessage());
         }
     }
@@ -171,10 +169,10 @@ public class FileController {
         }
         try {
             FileInfo fileInfo = fileService.updateFile(fileName, user, label);
-            logger.info("Image updated successfully by user {}: {}", user, fileInfo.getObjectName());
+            logger.info("[EMOFY] Image updated successfully by user {}: {}", user, fileInfo.getObjectName());
             return ResponseEntity.ok("File updated successfully!");
         } catch (Exception e) {
-            logger.error("User {} while updating {} recieved error: {}", user, fileName, e.getMessage());
+            logger.error("[EMOFY] User {} while updating {} recieved error: {}", user, fileName, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating file: " + e.getMessage());
         }
     }
@@ -195,7 +193,7 @@ public class FileController {
             Map<String, Map<String, String>> filesWithMetadata = fileService.getAllFilesWithMetadata();
             return ResponseEntity.ok(filesWithMetadata.toString());
         } catch (Exception e) {
-            logger.error("Model recieved error: {}", e.getMessage());
+            logger.error("[EMOFY] Model recieved error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -221,11 +219,11 @@ public class FileController {
         }
         try {
             Map<String, Map<String, String>> filesWithMetadata = fileService.getUserImages(user);
-            logger.info("User {} retrieved all the images", user);
+            logger.info("[EMOFY] User {} retrieved all the images", user);
             return ResponseEntity.ok(filesWithMetadata.toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            logger.error("User {} while retrieving all images recieved error: {}", user, e.getMessage());
+            logger.error("[EMOFY] User {} while retrieving all images recieved error: {}", user, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
