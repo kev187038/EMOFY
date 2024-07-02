@@ -35,7 +35,7 @@ spec:
               value: postgres
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: update
-          image: siralex01/emofy-login-service:latest #Cambiata questa prima era 
+          image: siralex01/emofy-login-service:latest
           imagePullPolicy: IfNotPresent
           name: emofy-login-service
           ports:
