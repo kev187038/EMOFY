@@ -8,6 +8,6 @@ public class HomepageController {
 
     @GetMapping("/")
     public String getHome() {
-        return "registrationForm";
+        return "loginForm";
     }
 }
