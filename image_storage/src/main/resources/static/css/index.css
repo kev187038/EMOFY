@@ -22,6 +22,7 @@ header {
     width: 25%;
     max-width: 300px;
     overflow-y: auto;
+    margin-top: 1em;
 }
 
 #main-content {
@@ -85,6 +86,19 @@ h2 a.btn-success:hover {
     border-color: #1e7e34;
 }
 
+#status-message {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: green;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: opacity 5s ease-out; /* Transizione di 2 secondi per l'opacità */
+}
 @media (max-width: 768px) {
     .container-fluid {
         flex-direction: column; /* Cambio layout a verticale */

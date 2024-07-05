@@ -10,7 +10,7 @@ spec:
       protocol: TCP
       port: 9000
       targetPort: 9000   # Porta API di MinIO
-  type: LoadBalancer #ClusterIP   # Esponi la porta API solo all'interno del cluster
+  type: ClusterIP   # Esponi la porta API solo all'interno del cluster
 
 ---
 apiVersion: v1
