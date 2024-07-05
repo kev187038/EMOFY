@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.eis.models.FileInfo;
 import com.example.eis.service.FileService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -52,27 +53,40 @@ public class FileController {
             content = {@Content(mediaType = "text/plain")})
     })
     @PostMapping(value = "/images/{user}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<Map<String, Object>> uploadFile(
             @RequestPart("file") MultipartFile file,
             @PathVariable String user,
             @RequestParam(value = "label", required = false) String label) {
-        
-        // Ottieni l'utente autenticato dall'oggetto SecurityContextHolder
+            
+        // Get the authenticated user from the SecurityContextHolder object
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUser = authentication.getName();
         if (!authenticatedUser.equals(user)) {
-            // L'utente autenticato non corrisponde all'utente specificato nella richiesta, quindi restituisci un errore
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to perform this action");
+            // Error: the authenticated user does not correspond to the current user
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", HttpStatus.UNAUTHORIZED.value());
+            response.put("message", "You are not authorized to perform this action");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         try {
             System.out.println("request " + file+ " " + user);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
             logger.info("[EMOFY] Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
-            return ResponseEntity.ok("File uploaded successfully!");
-        } catch (Exception e) {
-            logger.error("[EMOFY] User {} recieved error: {}", user, e.getMessage());
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", HttpStatus.OK.value());
+            response.put("message", "File uploaded successfully!");
+            response.put("fileInfo", fileInfo);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("[EMOFY] User {} received error: {}", user, e.getMessage());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("message", "Error uploading file: " + e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

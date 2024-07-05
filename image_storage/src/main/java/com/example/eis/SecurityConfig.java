@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.example.eis.utils.JwtAuthenticationFilter;
 import com.example.eis.utils.CustomAuthenticationEntryPoint;
@@ -24,6 +25,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
             .authorizeRequests()
             .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Consenti l'accesso a risorse statiche senza autenticazione
             .anyRequest().authenticated()
