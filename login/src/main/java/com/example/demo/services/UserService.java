@@ -70,6 +70,6 @@ public class UserService {
     }
 
     private void logLogin(User user) {
-        logger.info("[EMOFY] User logged in: {}", user.getUsername()); // Example log message
+        logger.info("[EMOFY] User logged in: {}, id {}", user.getUsername(), user.getId()); // Example log message
     }
 }
