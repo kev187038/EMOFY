@@ -27,7 +27,6 @@
             <div id="status-message">
                 <span id="status-message-text">Status Message</span>
             </div>
-
         </nav>
     </header>
     
@@ -37,11 +36,24 @@
                 <a href="#image-list" class="btn btn-success btn-lg btn-block">Your Images</a>
             </h2>
             <ul id="image-list" class="list-group">
-                <!-- Le immagini caricate saranno inserite qui -->
+                <!-- Uploaded images will be inserted here -->
             </ul>
         </aside>
         <main class="d-flex justify-content-center align-items-center" id="main-content">
             <div class="text-center">
+                <div id="selected-image-container" style="display: none;">
+                    <img id="selected-image" class="img-fluid" alt="Selected Image">
+                    <div class="mt-3">
+                        <label for="image-label">Select a label for your image</label>
+                        <select id="image-label" class="form-control">
+                            <option value="" disabled selected>Select a Label</option>
+                            <option value="label1">Label 1</option>
+                            <option value="label2">Label 2</option>
+                            <option value="label3">Label 3</option>
+                            <!-- Aggiungi altre opzioni secondo necessità -->
+                        </select>
+                    </div>
+                </div>
                 <div class="mb-4">
                     <button id="upload-button" class="btn btn-primary btn-lg">Upload now to get your results!</button>
                     <input type="file" id="file-input" style="display:none;" multiple>
@@ -52,7 +64,19 @@
                 </div>
             </div>
         </main>
-        <div class="p-3" id="filters"></div>
+        <div class="p-3" id="filters">
+            <div id = "filters-dropdown-container" class="mt-3" style="display: none;">
+                <label for="filters-dropdown">Apply a filter to your image</label>
+                <select id="filters-dropdown" class="form-control">
+                    <option value="" disabled selected>Select a Filter</option>
+                    <option value="filter1">Filter 1</option>
+                    <option value="filter2">Filter 2</option>
+                    <option value="filter3">Filter 3</option>
+                    <!-- Add more filters as needed -->
+                </select>
+            </div>
+
+        </div>
     </div>
     <aside class="container my-3">
         <div class="input-group">

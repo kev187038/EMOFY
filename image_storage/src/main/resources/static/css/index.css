@@ -14,8 +14,8 @@ header {
 
 .container-fluid {
     display: flex;
-    flex-direction: row; /* Layout orizzontale di default */
-    height: 100%; /* Riempie l'altezza dello schermo */
+    flex-direction: row; /* Default horizontal layout */
+    height: 100%; /* Fill screen height */
 }
 
 #sidebar {
@@ -35,12 +35,40 @@ header {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-top: 2em; /* Aggiunge margine superiore */
+    margin-top: 2em; /* Adds top margin */
+    max-width: 100%; /* Maximum width */
 }
 
 #filters {
-    width: 25%;
-    max-width: 300px;
+    position: sticky; /* Sticky positioning to fix the block when scrolling */
+    top: 1em; /* Distance from the top of the window */
+    width: 25%; /* Initial width */
+    max-width: 300px; /* Maximum width */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align contents to the start */
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2em; /* Bottom margin to separate filters from main content */
+    z-index: 100; /* Z-index to ensure filters are above content */
+}
+
+.form-control {
+    max-width: 100%; /* Limit maximum width to avoid horizontal overflow */
+}
+
+#image-label, #filters-dropdown {
+    max-height: 200px; /* Set maximum height for the dropdown menu */
+    overflow-y: auto; /* Add vertical scroll if needed */
+    max-width: 300px; 
+    min-width: 150px; 
+    margin: 0 auto; /* Center the dropdown horizontally */
+}
+
+label {
+    color: #333; 
+    margin-bottom: 0.5em;
+    display: block; /* Ensures the label takes up the full width */
 }
 
 #drop-area {
@@ -65,13 +93,13 @@ header {
 
 #search-input {
     width: 100%;
-    margin-top: 1em; /* Aggiunge margine sopra la barra di ricerca */
-    margin-bottom: 1em; /* Aggiunge margine sotto la barra di ricerca */
-    padding: 10px; /* Aggiunge padding per migliorare spaziatura */
+    margin-top: 1em; /* Adds top margin */
+    margin-bottom: 1em; /* Adds bottom margin */
+    padding: 10px; /* Adds padding for better spacing */
 }
 
 #upload-button, #search-button {
-    width: 100%; /* Larghezza totale in layout verticale */
+    width: 100%; /* Full width in vertical layout */
 }
 
 h2 a.btn-success {
@@ -97,29 +125,38 @@ h2 a.btn-success:hover {
     padding: 10px;
     border-radius: 5px;
     z-index: 1000;
-    transition: opacity 5s ease-out; /* Transizione di 2 secondi per l'opacità */
+    transition: opacity 5s ease-out; /* Transition for opacity */
 }
+
+.file-details {
+    text-align: left;
+}
+
 @media (max-width: 768px) {
     .container-fluid {
-        flex-direction: column; /* Cambio layout a verticale */
+        flex-direction: column; /* Change to vertical layout */
     }
 
     #sidebar {
-        width: 100%; /* Larghezza totale in layout verticale */
+        width: 100%; /* Full width in vertical layout */
         max-width: 100%;
     }
 
     #main-content {
-        width: 100%; /* Larghezza totale in layout verticale */
+        width: 100%; /* Full width in vertical layout */
         max-width: 100%;
-        margin-top: 2em; /* Aggiunge margine superiore */
+        margin-top: 2em; /* Adds top margin */
     }
 
     #filters {
-        display: none; /* Nascondi i filters */
+        display: none; /* Hide filters in mobile mode */
+        width: 100%; /* Occupy full width of the container */
+        max-width: 100%;
+        margin-top: 0; /* Remove top margin */
+        margin-bottom: 0; /* Remove bottom margin */
     }
 
     #search-input {
-        width: calc(100% - 20px); /* Larghezza meno il padding per evitare overflow */
+        width: calc(100% - 20px); /* Full width minus padding to avoid overflow */
     }
 }

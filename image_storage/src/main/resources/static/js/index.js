@@ -1,8 +1,10 @@
 // Array to keep track of pending files
 let pendingFiles = [];
+// Verifica lo stato iniziale della media query
+const mediaQuery = window.matchMedia('(max-width: 768px)');
+
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Recupera le immagini dell'utente quando la pagina viene caricata
     fetchUserImages();
 });
 
@@ -17,11 +19,10 @@ function fetchUserImages() {
         if (!response.ok) {
             throw new Error('Failed to fetch images');
         }
-        console.log(response)
         return response.json();
     })
     .then(data => {
-        populateImageList(data);
+        populateImageList(data.data);
     })
     .catch(error => {
         console.error('Error fetching images:', error);
@@ -30,23 +31,25 @@ function fetchUserImages() {
 
 function populateImageList(images) {
     const imageList = document.getElementById('image-list');
-    imageList.innerHTML = ''; // Pulisce il contenuto precedente
+    imageList.innerHTML = ''; 
 
     Object.keys(images).forEach(fileKey => {
         const fileMetadata = images[fileKey];
         const fileName = fileMetadata.filename;
-        const fileLabel = fileMetadata.label;
-        const fileTimestamp = fileMetadata.timestamp;
 
         const listItem = document.createElement('li');
         listItem.className = 'list-group-item list-group-item-action';
+        listItem.setAttribute('data-file-key', fileKey); 
 
         const fileDetails = document.createElement('div');
-        fileDetails.innerHTML = `
-            <strong>Filename:</strong> ${fileName}<br>
-            <strong>Label:</strong> ${fileLabel}<br>
-            <strong>Timestamp:</strong> ${fileTimestamp}
-        `;
+        fileDetails.className = 'file-details'; // Add this class
+        fileDetails.textContent = fileName; 
+
+        listItem.addEventListener('click', function() {
+            displayImage(fileKey); // Gestisce il click sull'immagine
+        });
+
+
         listItem.appendChild(fileDetails);
         imageList.appendChild(listItem);
     });
@@ -71,11 +74,17 @@ function addFilesToList(fileList) {
         pendingFiles.push(file);
 
         const listItem = document.createElement('li');
-        listItem.textContent = file.name;
         listItem.className = 'list-group-item list-group-item-action';
-        imageList.appendChild(listItem);
+        
+        const fileDetails = document.createElement('div');
+        fileDetails.className = 'file-details'; // Add this class
+        fileDetails.textContent = file.name;
+        
+        listItem.appendChild(fileDetails);
+        imageList.insertBefore(listItem, imageList.firstChild); // Add to the top of the list
     }
 }
+
 
 // Handle drag-and-drop events
 const dropArea = document.getElementById('drop-area');
@@ -102,6 +111,7 @@ document.getElementById('upload-button').addEventListener('click', function() {
     uploadFiles();
 });
 
+// Function to upload files to the API
 // Function to upload files to the API
 function uploadFiles() {
     if (pendingFiles.length > 0) {
@@ -132,16 +142,21 @@ function uploadFiles() {
         // Wait for all uploads to complete
         Promise.all(uploadPromises)
         .then(results => {
-            // Mostra tutti i messaggi di stato
+            // Run fetchUserImages after the timeout
+            setTimeout(fetchUserImages, 1000);
+
+            // Show all status messages
             showStatusMessages(results);
+
+            // Clear pendingFiles after upload completion
+            pendingFiles = [];
         });
-        pendingFiles = [];
     }
 }
 
 function showStatusMessages(results) {
     const statusElement = document.getElementById('status-message');
-    statusElement.innerHTML = ''; // Pulisce il contenuto precedente
+    statusElement.innerHTML = ''; // Clear previous content
 
     results.forEach(result => {
         const messageElement = document.createElement('div');
@@ -151,14 +166,93 @@ function showStatusMessages(results) {
         statusElement.appendChild(messageElement);
     });
 
-    statusElement.style.opacity = '1'; // Mostra il messaggio gradualmente
+    statusElement.style.opacity = '1'; // Show message gradually
     statusElement.style.display = 'block';
 
-    // Nascondi il messaggio dopo 3 secondi
+    // Hide the message after 3 seconds
     setTimeout(() => {
-        statusElement.style.opacity = '0'; // Nascondi gradualmente il messaggio
+        statusElement.style.opacity = '0'; // Gradually hide the message
         setTimeout(() => {
             statusElement.style.display = 'none';
-        }, 500); // Dopo 500ms, nascondi il messaggio definitivamente
-    }, 3000); // Mostra il messaggio per 3 secondi
+        }, 500); // After 500ms, hide the message permanently
+    }, 3000); // Show the message for 3 seconds
 }
+
+function displayImage(fileKey) {
+    fetch(`/api/images/${fileKey}`, {
+        method: 'GET',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch image');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const imageUrl = URL.createObjectURL(blob);
+        const selectedImage = document.getElementById('selected-image');
+        selectedImage.src = imageUrl;
+
+        // Show the selected-image container and the filters dropdown
+        const selectedImageContainer = document.getElementById('selected-image-container');
+        selectedImageContainer.style.display = 'block';
+
+        const filtersDropDown = document.getElementById('filters-dropdown-container');
+        filtersDropDown.style.display = 'block';
+
+        // Hide the drop-area and upload-button
+        const dropArea = document.getElementById('drop-area');
+        dropArea.style.display = 'none';
+
+        const uploadButton = document.getElementById('upload-button');
+        uploadButton.style.display = 'none';
+
+        // show filters div for small screens
+        if (mediaQuery.matches) {
+            document.getElementById('filters').style.display = 'block';
+        }
+
+    })
+    .catch(error => {
+        console.error('Error fetching image:', error);
+    });
+}
+
+let previousSearchTerm = '';
+let searchedItems = new Set();
+
+document.getElementById('search-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') { // Check if the pressed key is Enter
+        const searchTerm = this.value.toLowerCase();
+        const imageList = document.getElementById('image-list');
+        const items = imageList.getElementsByTagName('li');
+
+        // If the search term has changed, reset the searched items set
+        if (searchTerm !== previousSearchTerm) {
+            searchedItems = new Set();
+        }
+
+        previousSearchTerm = searchTerm;
+
+        for (let i = 0; i < items.length; i++) {
+            const fileDetailsElement = items[i].getElementsByClassName('file-details')[0];
+            const fileDetails = fileDetailsElement.innerText.toLowerCase();
+
+            // Skip already searched items
+            if (searchedItems.has(i)) {
+                continue;
+            }
+
+            if (fileDetails.includes(searchTerm)) {
+                console.log(i)
+                const fileKey = items[i].getAttribute('data-file-key');
+                displayImage(fileKey);
+                searchedItems.add(i); // Add to the set of searched items
+                break; // Stop after finding the first match
+            }
+        }
+    }
+});
