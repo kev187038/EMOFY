@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -109,8 +110,13 @@ public class FileController {
         try {
             FileInfo fileInfo = fileService.downloadFile(fileName, user);
             logger.info("[EMOFY] Image retrieved successfully by user {}: {}", user, fileInfo.getObjectName());
+        
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(fileInfo.getContentType()));
+            headers.set("X-File-Label", fileInfo.getLabel()); // Add the label to headers
+        
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(fileInfo.getContentType()))
+                    .headers(headers)
                     .body(fileInfo.getFileBytes());
             
         } catch (Exception e) {
@@ -129,11 +135,14 @@ public class FileController {
         description = "The image could not be deleted",
         content = {@Content(mediaType = "application/json")})
     })
-    public ResponseEntity<Map<String, Object>> deleteFile(@RequestParam("file") String file, 
-                                             @RequestParam("user") String user,
-                                             @PathVariable String fileName, 
-                                             @PathVariable String userName) {
+    public ResponseEntity<Map<String, Object>> deleteFile(@PathVariable String fileName, 
+                                                          @PathVariable String userName,
+                                                          @RequestBody Map<String, String> requestData
+                                                          ) {
         
+        String file = requestData.get("file");
+        String user = requestData.get("user");
+                                                    
         // Get the authenticated user from the SecurityContextHolder object
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUser = authentication.getName();

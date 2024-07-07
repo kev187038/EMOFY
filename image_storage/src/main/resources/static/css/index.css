@@ -132,6 +132,33 @@ h2 a.btn-success:hover {
     text-align: left;
 }
 
+#selected-image-container {
+    position: relative; /* Relative positioning to contain absolute elements */
+}
+
+#delete-image-button {
+    float: right; /* Float the button to the right */
+    padding: 5px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Change cursor on hover */
+    font-size: 14px; /* Icon size */
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#delete-image-button i {
+    margin-right: 4px; /* Margin right for the icon */
+    font-size: 16px; /* Icon size */
+}
+
+/* Styles for the selected image */
+#selected-image {
+    display: block; /* Ensure it's a block-level element */
+    max-width: 100%; /* Maximum width of the image */
+    height: auto; /* Automatic height based on width */
+}
+
 @media (max-width: 768px) {
     .container-fluid {
         flex-direction: column; /* Change to vertical layout */
@@ -159,4 +186,27 @@ h2 a.btn-success:hover {
     #search-input {
         width: calc(100% - 20px); /* Full width minus padding to avoid overflow */
     }
+
+    #delete-image-button {
+        padding: 2px; /* Reduce padding for smaller screens */
+        font-size: 9px;
+        border-radius: 2px; /* Rounded corners */
+    }
+
+    #delete-image-button i {
+        font-size: 10px; /* Reduce icon size for smaller screens */
+    }
+
+    nav .nav-link {
+        font-size: 14px; /* Dimensione del testo ridotta per i link */
+    }
+    
+    nav .btn {
+        font-size: 14px; /* Dimensione del testo ridotta per i bottoni */
+    }
+    
+    #status-message-text {
+        font-size: 14px; /* Dimensione del testo ridotta per lo status message */
+    }
+
 }

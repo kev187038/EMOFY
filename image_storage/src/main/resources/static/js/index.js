@@ -3,6 +3,23 @@ let pendingFiles = [];
 // Verifica lo stato iniziale della media query
 const mediaQuery = window.matchMedia('(max-width: 768px)');
 
+document.getElementById('logout-button').addEventListener('click', function() {  
+    fetch('logout', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload();
+        } else {
+            console.error('Logout failed');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserImages();
@@ -112,7 +129,6 @@ document.getElementById('upload-button').addEventListener('click', function() {
 });
 
 // Function to upload files to the API
-// Function to upload files to the API
 function uploadFiles() {
     if (pendingFiles.length > 0) {
         const uploadPromises = pendingFiles.map(file => {
@@ -189,12 +205,23 @@ function displayImage(fileKey) {
         if (!response.ok) {
             throw new Error('Failed to fetch image');
         }
+        const label = response.headers.get('X-File-Label'); // Get the label from headers
+
+        const labelDropdown = document.getElementById('image-label');
+        if (label) {
+            labelDropdown.value = label;
+        }
+        else {
+            labelDropdown.value = "";
+        }
+
         return response.blob();
     })
     .then(blob => {
         const imageUrl = URL.createObjectURL(blob);
         const selectedImage = document.getElementById('selected-image');
         selectedImage.src = imageUrl;
+        selectedImage.setAttribute('data-file-key', fileKey);
 
         // Show the selected-image container and the filters dropdown
         const selectedImageContainer = document.getElementById('selected-image-container');
@@ -210,7 +237,7 @@ function displayImage(fileKey) {
         const uploadButton = document.getElementById('upload-button');
         uploadButton.style.display = 'none';
 
-        // show filters div for small screens
+        // Show filters div for small screens
         if (mediaQuery.matches) {
             document.getElementById('filters').style.display = 'block';
         }
@@ -218,6 +245,79 @@ function displayImage(fileKey) {
     })
     .catch(error => {
         console.error('Error fetching image:', error);
+    });
+}
+
+document.getElementById('image-label').addEventListener('change', function() {
+    const selectedLabel = this.value;
+    const fileKey = document.getElementById('selected-image').getAttribute('data-file-key'); // Assumi che tu abbia un modo per ottenere il fileKey dell'immagine selezionata
+
+    if (selectedLabel) {
+        updateImageLabel(fileKey, selectedLabel);
+    }
+});
+
+function updateImageLabel(fileKey, label) {
+    const url = `api/images/${fileKey}`;
+
+    const formData = new FormData();
+    formData.append('label', label);
+
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            [csrfHeader]: csrfToken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 200) {
+            console.log('Label updated successfully');
+            setTimeout(fetchUserImages, 1000);
+        } else {
+            console.error('Failed to update label:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating label:', error);
+    });
+}
+
+document.getElementById('delete-image-button').addEventListener('click', function() {
+    const fileKey = document.getElementById('selected-image').getAttribute('data-file-key');
+    deleteImage(fileKey);
+});
+
+function deleteImage(fileKey) {
+    const file = fileKey.split('/').pop();
+
+    const url = `api/images/${fileKey}`;
+
+    const data = {
+        file: file,
+        user: userId
+    };
+
+    fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 200) {
+            console.log('Image deleted successfully');
+            setTimeout(location.reload(), 1000);
+        } else {
+            console.error('Failed to delete image:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting image:', error);
     });
 }
 
@@ -247,7 +347,6 @@ document.getElementById('search-input').addEventListener('keydown', function(eve
             }
 
             if (fileDetails.includes(searchTerm)) {
-                console.log(i)
                 const fileKey = items[i].getAttribute('data-file-key');
                 displayImage(fileKey);
                 searchedItems.add(i); // Add to the set of searched items
