@@ -16,4 +16,18 @@ public class ServiceController {
 
         return "index";
     }
+
+    @GetMapping("/images")
+    public String getImages(HttpServletRequest httpServletRequest, Model model) {
+        String userId = (String) httpServletRequest.getAttribute("userId");
+        model.addAttribute("userId", userId);
+
+        return "images";
+    }
+
+    @GetMapping("/about")
+    public String getAboutUs(HttpServletRequest httpServletRequest, Model model) {
+
+        return "aboutus";
+    }
 }

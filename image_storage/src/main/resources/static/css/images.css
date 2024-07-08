@@ -1,0 +1,32 @@
+#image-container {
+    margin-bottom: 2rem;
+}
+
+.image-card {
+    margin-bottom: 1.5rem;
+}
+
+.image-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.image-card .card-body {
+    padding: 1rem;
+}
+
+.image-card .card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+#load-more {
+    padding: 0.5rem 2rem;
+}
+
+@media (max-width: 768px) {
+    #page-title {
+        text-align: center;
+    }
+}

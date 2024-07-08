@@ -21,8 +21,22 @@ document.getElementById('logout-button').addEventListener('click', function() {
 });
 
 
+// Aggiungi questa funzione all'inizio del file index.js
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Modifica la funzione esistente DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
+    const fileKey = getUrlParameter('fileKey');
+    if (fileKey) {
+        displayImage(fileKey);
+    } 
     fetchUserImages();
+    
 });
 
 function fetchUserImages() {

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emofy - About Us</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/images.css}">
+    <script th:inline="javascript">
+        var csrfToken = /*[[${_csrf.token}]]*/ 'defaultCsrfToken';
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('logout-button').addEventListener('click', function() {  
+                fetch('logout', {
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/";
+                    } else {
+                        console.error('Logout failed');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <nav class="container d-flex justify-content-between align-items-center position-relative">
+            <div>
+                <a class="nav-link text-white d-inline" href="/">Home</a>
+                <a class="nav-link text-white d-inline" href="/about">About Us</a>
+            </div>
+            <div class="ms-auto">
+                <button id="help-button" class="btn btn-outline-light me-2">Need Help?</button>
+                <button id="logout-button" class="btn btn-outline-light">Logout</button>
+            </div>
+        </nav>        
+    </header>
+    
+    <main class="container my-5">
+        <h1 id = "page-title" class="mb-4">About Us</h1>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">We are Alessio Maiola, Gabriele Matini, and Placido Pellegriti.</p>
+                <p class="card-text">We are three passionate programmers with a drive for coding and innovation.</p>
+                <p class="card-text">Our goal is to create innovative solutions that make a difference in the world of technology.</p>
+                <p class="card-text">Feel free to reach out to us for any inquiries or collaboration opportunities!</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

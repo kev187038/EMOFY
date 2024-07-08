@@ -35,7 +35,6 @@ public class SecurityConfig {
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Aggiungi il filtro JwtAuthenticationFilter prima di UsernamePasswordAuthenticationFilter
             .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION_TOKEN")
                 .permitAll()
