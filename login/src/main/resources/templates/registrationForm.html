@@ -53,6 +53,19 @@
             background-color: #45a049;
         }
     </style>
+     <script>
+        // Function to toggle the submit button based on the checkbox state
+        function toggleSubmitButton() {
+            const termsCheckbox = document.getElementById('terms');
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = !termsCheckbox.checked;
+        }
+
+        // Call the function when the page loads to set the initial state
+        window.onload = function() {
+            toggleSubmitButton();
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -69,10 +82,9 @@
             <input type="text" id="em" name="email"><br>
             <label for="birthDate">Birth Date: </label><br>
             <input type="date" id="birthDate" name="birthDate"><br>
-            <input type="checkbox" id="terms" name="terms">
-            <label for="terms">I accept the terms of services</label><br><br>
-
-            <input type="submit" value="Register">
+            <input type="checkbox" id="terms" name="terms" onclick="toggleSubmitButton()">
+            <label for="terms"><a href="/serviceTerms">I accept the terms of services</a></label><br><br>
+            <input type="submit" id="submitButton" value="Register" disabled>
         </form>
     </div>
     <div class="container">

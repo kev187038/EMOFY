@@ -10,4 +10,9 @@ public class HomepageController {
     public String getHome() {
         return "loginForm";
     }
+
+    @GetMapping("/serviceTerms")
+    public String getTerms() {
+        return "serviceTerms";
+    }
 }
