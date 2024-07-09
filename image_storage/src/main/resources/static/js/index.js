@@ -325,6 +325,7 @@ function deleteImage(fileKey) {
     .then(data => {
         if (data.status === 200) {
             console.log('Image deleted successfully');
+            window.history.replaceState({}, document.title, window.location.pathname);
             setTimeout(location.reload(), 1000);
         } else {
             console.error('Failed to delete image:', data.message);
