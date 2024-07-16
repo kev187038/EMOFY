@@ -40,6 +40,18 @@ pipeline {
             }
         }
 
+        stage('deploy image filter service')
+        {
+            steps {
+                script {
+                    dir('image_filter') {
+                        sh 'kubectl create -f deployment/emofy-image-filter-deployment.yaml'
+                        sh 'kubectl create -f service/emofy-image-filter-service.yaml'
+                    }
+                }
+            }
+        }
+
         stage('Tunnel to localhost') {
             environment {
                 time_to_sleep = 10
