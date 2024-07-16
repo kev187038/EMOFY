@@ -6,12 +6,11 @@ import base64
 import logging
 import numpy as np
 from Image import Image
-from utils import set_logger
+from logger import set_logger
 from flask import Flask, request, jsonify
 
 
-logger = logging.getLogger('filters')
-logger = set_logger(logger)
+logger = set_logger('image_filter_server')
 logger.info('Server started')
 
 app = Flask(__name__)
