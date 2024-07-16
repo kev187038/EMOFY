@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-filters-deployment
+  labels:
+    app: image-filters
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: image-filters
+  template:
+    metadata:
+      labels:
+        app: image-filters
+    spec:
+      containers:
+      - name: image-filters-container
+        image: placidop/image_filter:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: production
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
