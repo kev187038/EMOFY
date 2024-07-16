@@ -1,5 +1,5 @@
 docker login
-cd image_storage
+cd image_filter
 docker build -t image_filter:latest .
 cd ..
 docker tag image_filter:latest placidop/image_filter:latest
