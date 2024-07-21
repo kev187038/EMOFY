@@ -52,6 +52,22 @@ pipeline {
             }
         }
 
+        stage('deploy image filter service')
+        {
+            steps {
+                script {
+                    dir('ElkStack') {
+                        bat 'kubectl create -f elasticsearch-deployment.yaml'
+                        bat 'kubectl create -f kibana-deployment.yaml'
+                        bat 'kubectl create -f logstash-deployment.yaml'
+                        bat 'kubectl create -f elasticsearch-service.yaml'
+                        bat 'kubectl create -f kibana-service.yaml'
+                        bat 'kubectl create -f logstash-service.yaml'
+                    }
+                }
+            }
+        }
+
         stage('Tunnel to localhost') {
             environment {
                 time_to_sleep = 10
@@ -65,6 +81,7 @@ pipeline {
                         is_pod_running = is_pod_running && bat(script: "kubectl get pod -l app=emofy-image-storage -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && bat(script: "kubectl get pod -l app=image-filters-deployment -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && bat(script: "kubectl get pod -l app=minio-deployment -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && bat(script: "kubectl get pod -l app=kibana -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
 
                         sleep time_to_sleep
                     }                   
@@ -75,7 +92,7 @@ pipeline {
                             bat 'start /b cmd /c "kubectl port-forward service/emofy-image-storage 8081:8081"'
                             bat 'start /b cmd /c "kubectl port-forward service/image-filters-service 5000:5000"'
                             bat 'start /b cmd /c "kubectl port-forward service/minio-console 9001:9001"'
-                            
+                            bat 'start /b cmd /c "kubectl port-forward service/kibana 5601:5601"'
 		                }
                     } 
                     else {
