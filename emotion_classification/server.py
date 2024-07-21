@@ -12,3 +12,8 @@ def detect_face():
     base64_img = data['image']
     return jsonify({'face_detected': FaceDetector().detect_face(base64_img)})
 
+@app.route('/detect_emotion', methods=['POST'])
+def detect_emotion():
+    data = request.json
+    base64_img = data['image']
+    return jsonify({'emotion': EmotionDetector().detect_emotion(base64_img)})
