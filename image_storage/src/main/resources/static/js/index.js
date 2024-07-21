@@ -439,10 +439,14 @@ function applyFilter(fileKey, filter, base64Image) {
 document.getElementById('store-button').addEventListener('click', function() {
     const selectedImage = document.getElementById('selected-image');
     const base64Image = getBase64Image(selectedImage);
-    const originalFileName = selectedImage.getAttribute('data-file-name').replace(/\.[^/.]+$/, ""); // Retrieve the original file name
+    const originalFileName = selectedImage.getAttribute('data-file-name');
 
+    // Separate the file name and the extension
+    const fileNameWithoutExtension = originalFileName.replace(/\.[^/.]+$/, "");
+    const fileExtension = originalFileName.match(/\.[^/.]+$/)[0];
+    
     // Generate the new file name for the filtered image
-    const newFileName = `${originalFileName} filtered.png`; 
+    const newFileName = `${fileNameWithoutExtension} filtered${fileExtension}`;
     uploadFilteredImage(base64Image, newFileName);
 });
 
