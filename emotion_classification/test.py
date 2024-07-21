@@ -18,3 +18,9 @@ if __name__ == '__main__':
         assert response.status_code == 200
         assert response.json['face_detected'] == True
 
+        img = cv2.imread('test_images/angry.jpeg')
+        _, buffer = cv2.imencode('.jpeg', img)
+        img_str = base64.b64encode(buffer).decode('utf-8')
+        response = client.post('/detect_emotion', json={'image': img_str})
+        assert response.status_code == 200
+        assert response.json['emotion']['emotion'] == 'angry'
