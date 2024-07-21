@@ -52,7 +52,7 @@ pipeline {
             }
         }
 
-        stage('deploy image filter service')
+        stage('deploy elk-stack')
         {
             steps {
                 script {
