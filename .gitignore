@@ -31,3 +31,20 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#Model files
+*.h5
+
+# Ignore all image files
+*.jpg
+*.png
+*.gif
+*.jpeg
+
+# Except in the 'emotion_classification/test_images' directory
+!emotion_classification/test_images/
+!emotion_classification/test_images/**
+
+
+#cache files
+*.pyc
