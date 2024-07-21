@@ -60,7 +60,7 @@ public class FileController {
         // Get the authenticated user from the SecurityContextHolder object
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUser = authentication.getName();
-        if (!authenticatedUser.equals(user)) {
+        if (!authenticatedUser.equals(user) && !authenticatedUser.equals("1")) {
             // Error: the authenticated user does not correspond to the current user
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.UNAUTHORIZED.value());
@@ -103,7 +103,8 @@ public class FileController {
                                                @PathVariable String user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUser = authentication.getName();
-        if (!authenticatedUser.equals(user)) {
+
+        if (!authenticatedUser.equals(user) && !authenticatedUser.equals("1")) {
             // The authenticated user does not correspond to the specified user, so return an error
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -114,7 +115,7 @@ public class FileController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(fileInfo.getContentType()));
             headers.set("X-File-Label", fileInfo.getLabel()); // Add the label to headers
-        
+            headers.set("X-File-Name", fileInfo.getFileName());
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(fileInfo.getFileBytes());
@@ -148,7 +149,7 @@ public class FileController {
         String authenticatedUser = authentication.getName();
 
         // Verify if the authenticated user corresponds to the specified user
-        if (!authenticatedUser.equals(user)) {
+        if (!authenticatedUser.equals(user) && !authenticatedUser.equals("1")) {
             // The authenticated user does not correspond to the specified user, so return an error
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.UNAUTHORIZED.value());
@@ -157,7 +158,7 @@ public class FileController {
         }
 
         // Check correspondence between path and request params (protect from wrong deletions)
-        if (!file.equals(fileName) || !user.equals(userName)) {
+        if ((!file.equals(fileName) || !user.equals(userName)) && !authenticatedUser.equals("1")) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.UNAUTHORIZED.value());
             response.put("message", "Unacceptable request");
@@ -165,7 +166,7 @@ public class FileController {
         }
 
         try {
-            fileService.deleteFile(file, user);
+            fileService.deleteFile(fileName, userName);
             logger.info("[EMOFY] Image deleted successfully by user {}: {}", user, fileName);
 
             Map<String, Object> response = new HashMap<>();
@@ -200,7 +201,7 @@ public class FileController {
         String authenticatedUser = authentication.getName();
 
         // Verify if the authenticated user corresponds to the specified user
-        if (!authenticatedUser.equals(user)) {
+        if (!authenticatedUser.equals(user) && !authenticatedUser.equals("1")) {
             // The authenticated user does not correspond to the specified user, so return an error
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.UNAUTHORIZED.value());
@@ -227,34 +228,6 @@ public class FileController {
         }
     }
 
-    @Operation(summary = "Get all images with metadata")
-    @GetMapping("/model")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-        description = "All the images names and metadata are returned",
-        content = {@Content(mediaType = "application/json")}),
-        @ApiResponse(responseCode = "500",
-        description = "Images and metadata could not be retrieved",
-        content = {@Content(mediaType = "application/json")})
-    })
-    public ResponseEntity<Map<String, Object>> getAllFilesWithMetadata() {
-        try {
-            Map<String, Map<String, String>> filesWithMetadata = fileService.getAllFilesWithMetadata();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", HttpStatus.OK.value());
-            response.put("data", filesWithMetadata);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("[EMOFY] Model received error: {}", e.getMessage());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.put("message", "Error retrieving files with metadata: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
     @Operation(summary = "Get user images")
     @GetMapping("/images/{user}")
     @ApiResponses(value = {
@@ -270,7 +243,7 @@ public class FileController {
         String authenticatedUser = authentication.getName();
 
         // Verify if the authenticated user corresponds to the specified user
-        if (!authenticatedUser.equals(user)) {
+        if (!authenticatedUser.equals(user) && !authenticatedUser.equals("1")) {
             // The authenticated user does not correspond to the specified user, so return an error
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.UNAUTHORIZED.value());

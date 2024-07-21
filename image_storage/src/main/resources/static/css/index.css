@@ -37,6 +37,7 @@ header {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     margin-top: 2em; /* Adds top margin */
     max-width: 100%; /* Maximum width */
+    position: relative;
 }
 
 #filters {
@@ -114,6 +115,12 @@ h2 a.btn-success:hover {
     border-color: #1e7e34;
 }
 
+#store-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #status-message {
     display: none;
     position: absolute;
@@ -132,19 +139,17 @@ h2 a.btn-success:hover {
     text-align: left;
 }
 
-#selected-image-container {
-    position: relative; /* Relative positioning to contain absolute elements */
-}
-
 #delete-image-button {
-    float: right; /* Float the button to the right */
     padding: 5px; /* Padding inside the button */
     border: none; /* No border */
     border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
     font-size: 14px; /* Icon size */
-    margin-bottom: 10px;
     text-align: center;
+    top: 20px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    position: absolute; /* Position it absolutely within the relative container */
+    display: none;
 }
 
 #delete-image-button i {
@@ -152,11 +157,16 @@ h2 a.btn-success:hover {
     font-size: 16px; /* Icon size */
 }
 
+#selected-image-container {
+    padding-top: 40px; /* Adds space at the top of the container */
+}
+
 /* Styles for the selected image */
 #selected-image {
     display: block; /* Ensure it's a block-level element */
-    max-width: 100%; /* Maximum width of the image */
-    height: auto; /* Automatic height based on width */
+    max-width: 60vw; /* Maximum width of the image */
+    max-height: 60vh;
+    object-fit: contain;
 }
 
 @media (max-width: 768px) {
@@ -173,6 +183,11 @@ h2 a.btn-success:hover {
         width: 100%; /* Full width in vertical layout */
         max-width: 100%;
         margin-top: 2em; /* Adds top margin */
+
+    }
+
+    #selected-image-container {
+        padding-top: 20px; /* Adds space at the top of the container */
     }
 
     #filters {
@@ -197,6 +212,12 @@ h2 a.btn-success:hover {
         font-size: 10px; /* Reduce icon size for smaller screens */
     }
 
+    #store-button {
+        font-size: 0.65rem; /* Smaller font size */
+        padding: 0.5rem 0.75rem; /* Smaller padding */
+
+    }
+
     nav .nav-link {
         font-size: 14px; /* Dimensione del testo ridotta per i link */
     }
@@ -207,6 +228,10 @@ h2 a.btn-success:hover {
     
     #status-message-text {
         font-size: 14px; /* Dimensione del testo ridotta per lo status message */
+    }
+
+    #selected-image{
+        max-height: 40vh;    
     }
 
 }

@@ -8,12 +8,14 @@ import numpy as np
 from Image import Image
 from logger import set_logger
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 
 
 logger = set_logger('image_filter_server')
 logger.info('Server started')
 
 app = Flask(__name__)
+CORS(app, resources={r"/apply_filter": {"origins": "http://localhost:8081"}})
 
 @app.route('/apply_filter', methods=['POST'])
 def apply_filter():
