@@ -45,8 +45,8 @@ pipeline {
             steps {
                 script {
                     dir('image_filter') {
-                        bat 'kubectl create -f deployment\\emofy-image-filter-deployment.yaml'
-                        bat 'kubectl create -f service\\emofy-image-filter-service.yaml'
+                        bat 'kubectl create -f k8\\deployment.yaml'
+                        bat 'kubectl create -f k8\\service.yaml'
                     }
                 }
             }
