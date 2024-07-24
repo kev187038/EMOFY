@@ -45,8 +45,24 @@ pipeline {
             steps {
                 script {
                     dir('image_filter') {
-                        sh 'kubectl create -f deployment/emofy-image-filter-deployment.yaml'
-                        sh 'kubectl create -f service/emofy-image-filter-service.yaml'
+                        sh 'kubectl create -f k8/deployment.yaml'
+                        sh 'kubectl create -f k8/service.yaml'
+                    }
+                }
+            }
+        }
+
+        stage('deploy elk-stack')
+        {
+            steps {
+                script {
+                    dir('ElkStack') {
+                        sh 'kubectl create -f elasticsearch-deployment.yaml'
+                        sh 'kubectl create -f kibana-deployment.yaml'
+                        sh 'kubectl create -f logstash-deployment.yaml'
+                        sh 'kubectl create -f elasticsearch-service.yaml'
+                        sh 'kubectl create -f kibana-service.yaml'
+                        sh 'kubectl create -f logstash-service.yaml'
                     }
                 }
             }
@@ -54,8 +70,8 @@ pipeline {
 
         stage('Tunnel to localhost') {
             environment {
-                time_to_sleep = 10
-                tries = 20
+                time_to_sleep = 30
+                tries = 100
             }
             steps {
                 script {
@@ -63,6 +79,9 @@ pipeline {
                     for (int i = 0; i < tries.toInteger() && !is_pod_running; i++) {                     
                         is_pod_running = sh(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=emofy-image-storage -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=image-filters -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=minio -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=kibana -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
 
                         sleep time_to_sleep
                     }                   
@@ -71,6 +90,9 @@ pipeline {
                         withEnv(['JENKINS_NODE_COOKIE=dontkillMe']) {
                             sh 'nohup kubectl port-forward service/emofy-login-service 8085:8085 &'
                             sh 'nohup kubectl port-forward service/emofy-image-storage 8081:8081 &'
+                            sh 'nohup kubectl port-forward service/image-filters-service 5000:5000 &'
+                            sh 'nohup kubectl port-forward service/minio-console 9001:9001 &'
+                            sh 'nohup kubectl port-forward service/kibana 5601:5601 &'
 		                }
                     } 
                     else {

@@ -478,6 +478,9 @@ function uploadImage(blob, fileName) {
     .then(result => {
         // Update the UI or show a message after the upload
         showStatusMessages([result]);
+        
+        const selectedImage = document.getElementById('selected-image');
+        displayImage(selectedImage.getAttribute('data-file-key'));
 
         // Refresh the image list
         setTimeout(fetchUserImages, 1000);

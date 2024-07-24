@@ -68,14 +68,12 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         try {
-            System.out.println("request " + file+ " " + user);
             FileInfo fileInfo = fileService.uploadFile(file, user, label);
             logger.info("[EMOFY] Image uploaded successfully by user {}: {}", user, fileInfo.getObjectName());
 
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.OK.value());
             response.put("message", "File uploaded successfully!");
-            response.put("fileInfo", fileInfo);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -216,7 +214,7 @@ public class FileController {
             Map<String, Object> response = new HashMap<>();
             response.put("status", HttpStatus.OK.value());
             response.put("message", "File updated successfully!");
-            response.put("fileInfo", fileInfo);
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             logger.error("[EMOFY] User {} while updating {} received error: {}", user, fileName, e.getMessage());
@@ -260,7 +258,6 @@ public class FileController {
             response.put("data", filesWithMetadata);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             logger.error("[EMOFY] User {} while retrieving all images received error: {}", user, e.getMessage());
 
             Map<String, Object> response = new HashMap<>();
