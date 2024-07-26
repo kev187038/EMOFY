@@ -18,6 +18,11 @@ class FaceDetector:
         img = self.decode_image(base64_img)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
-        return len(faces) > 0
-
-    
+        
+        # Check if at least one face is detected
+        if len(faces) == 0: return False
+        
+        # Extract and return the first detected face
+        x, y, w, h = faces[0]
+        face_img = img[y:y+h, x:x+w]
+        return face_img
