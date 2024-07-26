@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 
 # Set the paths to the dataset
 test_dir = 'fer-2013/test'
@@ -23,7 +24,7 @@ test_generator = test_datagen.flow_from_directory(
 )
 
 # Load the trained model
-model = load_model('emotion_recognition_model.h5')
+model = load_model('model.h5')
 
 # Predict on the test data
 test_generator.reset()
@@ -36,6 +37,10 @@ class_labels = list(test_generator.class_indices.keys())
 
 # Calculate classification report
 report = classification_report(y_true, y_pred, target_names=class_labels, output_dict=True)
+
+#total accuracy
+total_accuracy = accuracy_score(y_true, y_pred)
+print("Total Accuracy: ", total_accuracy)
 
 # Print classification report
 print("Classification Report:")
