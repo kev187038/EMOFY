@@ -43,11 +43,11 @@
             </ul>
         </aside>
         <main class="d-flex justify-content-center align-items-center" id="main-content">
+            <button id="delete-image-button" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete Image
+            </button>   
             <div class="text-center">
                 <div id="selected-image-container" style="display: none;">
-                    <button id="delete-image-button" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Delete Image
-                    </button>        
                     <img id="selected-image" class="img-fluid" alt="Selected Image">
                     <div class="mt-3">
                         <label for="image-label">Select a label for your image</label>
@@ -71,17 +71,31 @@
             </div>
         </main>
         <div class="p-3" id="filters">
-            <div id = "filters-dropdown-container" class="mt-3" style="display: none;">
+            <div id="filters-dropdown-container" class="mt-3" style="display: none;">
                 <label for="filters-dropdown">Apply a filter to your image</label>
                 <select id="filters-dropdown" class="form-control">
                     <option value="" disabled selected>Select a Filter</option>
-                    <option value="filter1">Filter 1</option>
-                    <option value="filter2">Filter 2</option>
-                    <option value="filter3">Filter 3</option>
-                    <!-- Add more filters as needed -->
+                    <option value="gray">Gray</option>
+                    <option value="blur">Blur</option>
+                    <option value="canny">Canny</option>
+                    <option value="dilate">Dilate</option>
+                    <option value="erode">Erode</option>
+                    <option value="sepia">Sepia</option>
+                    <option value="cartoonify">Cartoonify</option>
+                    <option value="negative">Negative</option>
+                    <option value="emboss">Emboss</option>
+                    <option value="sharpen">Sharpen</option>
+                    <option value="edge_enhance">Edge Enhance</option>
+                    <option value="rainbowify">Rainbowify</option>
+                    <option value="mirror">Mirror</option>
+                    <option value="flip">Flip</option>
+                    <option value="rotate_clockwise">Rotate Clockwise</option>
+                    <option value="rotate_counterclockwise">Rotate Counterclockwise</option>                
                 </select>
             </div>
-
+            <div class="mt-3" id="store-button-container">
+                <button id="store-button" class="btn btn-success btn-lg" style="display: none;">Store Result</button>
+            </div>
         </div>
     </div>
     <aside class="container my-3">

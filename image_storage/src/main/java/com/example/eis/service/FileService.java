@@ -111,7 +111,7 @@ public class FileService {
         Queue<String> directoriesToExplore = new LinkedList<>();
 
         // Add the main directory (bucket) to the queue
-        directoriesToExplore.add(user.equals("model") ? "" : user + "/");
+        directoriesToExplore.add(user.equals("1") ? "" : user + "/");
 
         while (!directoriesToExplore.isEmpty()) {
             String currentDirectory = directoriesToExplore.poll();

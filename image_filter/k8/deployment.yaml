@@ -5,7 +5,7 @@ metadata:
   labels:
     app: image-filters
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: image-filters
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: image-filters-container
-        image: placidop/image_filter:latest
+        image: siralex01/image_filter:latest
         ports:
         - containerPort: 5000
         env:

@@ -220,6 +220,10 @@ function displayImage(fileKey) {
             throw new Error('Failed to fetch image');
         }
         const label = response.headers.get('X-File-Label'); // Get the label from headers
+        const file_name = response.headers.get('X-File-Name'); // Get the original file name
+        const selectedImage = document.getElementById('selected-image');
+        selectedImage.setAttribute('data-file-name', file_name);
+        document.getElementById('store-button').style.display = 'none';
 
         const labelDropdown = document.getElementById('image-label');
         if (label) {
@@ -228,7 +232,6 @@ function displayImage(fileKey) {
         else {
             labelDropdown.value = "";
         }
-
         return response.blob();
     })
     .then(blob => {
@@ -240,6 +243,9 @@ function displayImage(fileKey) {
         // Show the selected-image container and the filters dropdown
         const selectedImageContainer = document.getElementById('selected-image-container');
         selectedImageContainer.style.display = 'block';
+
+        const deleteImageButton = document.getElementById('delete-image-button');
+        deleteImageButton.style.display = 'block';
 
         const filtersDropDown = document.getElementById('filters-dropdown-container');
         filtersDropDown.style.display = 'block';
@@ -370,3 +376,134 @@ document.getElementById('search-input').addEventListener('keydown', function(eve
         }
     }
 });
+
+document.getElementById('filters-dropdown').addEventListener('change', function(event) {
+    const selectedFilter = this.value;
+    const selectedImage = document.getElementById('selected-image');
+    const fileKey = selectedImage.getAttribute('data-file-key');
+
+    if (selectedFilter && fileKey) {
+        const base64Image = getBase64Image(selectedImage);
+        applyFilter(fileKey, selectedFilter, base64Image);
+    }
+});
+
+function getBase64Image(img) {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth; // Usa le dimensioni naturali dell'immagine
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    const dataURL = canvas.toDataURL("image/png");
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+
+function applyFilter(fileKey, filter, base64Image) {
+    const url = 'http://localhost:5000/apply_filter';
+
+    const payload = {
+        image: base64Image,
+        filter: filter
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to apply filter');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.filtered_image) {
+            const imageUrl = `data:image/png;base64,${data.filtered_image}`;
+            
+            const selectedImage = document.getElementById('selected-image');
+            selectedImage.src = imageUrl;
+            document.getElementById('filters-dropdown').value = ''; 
+            document.getElementById('store-button').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error applying filter:', error);
+    });
+}
+
+document.getElementById('store-button').addEventListener('click', function() {
+    const selectedImage = document.getElementById('selected-image');
+    const base64Image = getBase64Image(selectedImage);
+    const originalFileName = selectedImage.getAttribute('data-file-name');
+
+    // Separate the file name and the extension
+    const fileNameWithoutExtension = originalFileName.replace(/\.[^/.]+$/, "");
+    const fileExtension = originalFileName.match(/\.[^/.]+$/)[0];
+    
+    // Generate the new file name for the filtered image
+    const newFileName = `${fileNameWithoutExtension} filtered${fileExtension}`;
+    uploadFilteredImage(base64Image, newFileName);
+});
+
+function uploadFilteredImage(base64Image, fileName) {
+    const blob = base64ToBlob(base64Image, 'image/png');
+    
+    uploadImage(blob, fileName);
+        
+}
+
+function uploadImage(blob, fileName) {
+    const formData = new FormData();
+    formData.append('file', blob, fileName);
+
+    fetch(`/api/images/${userId}`, {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        },
+        body: formData,
+    })
+    .then(response => {
+        if (response.ok) {
+            return { fileName: fileName, status: 'uploaded successfully' };
+        } else {
+            return { fileName: fileName, status: 'failed to upload' };
+        }
+    })
+    .then(result => {
+        // Update the UI or show a message after the upload
+        showStatusMessages([result]);
+        
+        const selectedImage = document.getElementById('selected-image');
+        displayImage(selectedImage.getAttribute('data-file-key'));
+
+        // Refresh the image list
+        setTimeout(fetchUserImages, 1000);
+    })
+    .catch(error => {
+        console.error(`Error uploading ${fileName}:`, error);
+        showStatusMessages([{ fileName: fileName, status: 'failed to upload' }]);
+    });
+}
+
+
+function base64ToBlob(base64, mimeType) {
+    const sliceSize = 512;
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, { type: mimeType });
+}

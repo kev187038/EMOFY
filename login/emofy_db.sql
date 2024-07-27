@@ -70,7 +70,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.users (id, username, role, password, email, birth_date) FROM stdin;
-1	sss	\N	aaaa	asfdf@ff.com	\N
+1	admin	\N	admin	admin@emofy.com	\N
 \.
 
 
