@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emotion-detector-deployment
+  labels:
+    app: emotion-detector
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: emotion-detector
+  template:
+    metadata:
+      labels:
+        app: emotion-detector
+    spec:
+      containers:
+      - name: emotion-detector-container
+        image: placidop/emotion-detector:latest
+        ports:
+        - containerPort: 5001
+        env:
+        - name: FLASK_ENV
+          value: production
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: access_key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: secret_key
+        - name: MODEL_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: emofy-model-config
+              key: MODEL_BUCKET
+        - name: MODEL_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: emofy-model-config
+              key: MODEL_NAME
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
