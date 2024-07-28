@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: emofy-retraining
+spec:
+  schedule: "0 0 1 * *"  # This means the job will run at midnight on the first day of every month
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: emofy-retraining
+              image: placidop/emofy-retraining
+              env:
+                - name: LOGIN_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: login-credentials
+                      key: username
+                - name: LOGIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: login-credentials
+                      key: password
+                - name: MINIO_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: access_key
+                - name: MINIO_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: secret_key
+                - name: MODEL_BUCKET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: emofy-model-config
+                      key: MODEL_BUCKET
+                - name: MODEL_NAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: emofy-model-config
+                      key: MODEL_NAME
+          restartPolicy: OnFailure
