@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 
 # Set the paths to the dataset
-test_dir = 'fer-2013/test'
+test_dir = '../fer-2013/test'
 
 # Create an ImageDataGenerator for the test data
 test_datagen = ImageDataGenerator(rescale=1.0/255)
@@ -24,7 +24,7 @@ test_generator = test_datagen.flow_from_directory(
 )
 
 # Load the trained model
-model = load_model('model.h5')
+model = load_model('C:\\Users\\P.Pellegriti\\Documents\\emofy\\EMOFY\\emotion_classification\\retraining\\emotion_recognition_model_updated.h5')
 
 # Predict on the test data
 test_generator.reset()

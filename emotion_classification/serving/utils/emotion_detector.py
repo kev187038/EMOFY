@@ -3,13 +3,14 @@ import numpy as np
 import cv2
 from io import BytesIO
 from PIL import Image
+from utils.face_detector import FaceDetector
 from tensorflow.keras.models import load_model
 
 class EmotionDetector:
 
     def __init__(self):
         # Initialize the face detector
-        from face_detector import FaceDetector
+        
         self.face_detector = FaceDetector()
         # Load the pre-trained emotion recognition model
         self.model = load_model('model.h5')
