@@ -35,17 +35,19 @@ spec:
         - name: MODEL_BUCKET
           valueFrom:
             configMapKeyRef:
-              name: emofy-model-config
+              name: minio-model-config
               key: MODEL_BUCKET
         - name: MODEL_NAME
           valueFrom:
             configMapKeyRef:
-              name: emofy-model-config
+              name: minio-model-config
               key: MODEL_NAME
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "250m"
+            memory: "2Gi"
+            cpu: "1"
+            nvidia.com/gpu: 1 # Request 1 GPU
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "4Gi"
+            cpu: "2"
+            nvidia.com/gpu: 1 # Limit to 1 GPU
