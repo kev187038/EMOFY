@@ -1,4 +1,4 @@
-minikube start
+minikube start --driver=docker --gpus all
 
 call ./login/createall.bat 
 call ./image_storage/createall.bat
