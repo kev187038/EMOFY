@@ -1,5 +1,0 @@
-PIL
-scipy
-tensorflow
-opencv-python
-tensorrt
