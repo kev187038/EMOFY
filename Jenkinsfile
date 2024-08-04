@@ -52,6 +52,31 @@ pipeline {
             }
         }
 
+        stage('deploy model serving service')
+        {
+            steps {
+                script {
+                    dir('emotion_classification/serving') {
+                        sh 'kubectl create -f k8/login-credentials.yaml'
+                        sh 'kubectl create -f k8/minio-credentials.yaml'
+                        sh 'kubectl create -f k8/minio-model.yaml'
+                        sh 'kubectl create -f k8/deployment.yaml'
+                        sh 'kubectl create -f k8/service.yaml'
+                    }
+                }
+            }
+        }
+
+        stage('deploy retraining cronjob') {
+            steps {
+                script {
+                    dir('emotion_classification/retraining') {
+                        sh 'kubectl create -f k8/retrain-cron.yaml'
+                    }
+                }
+            }
+        }
+
         stage('deploy elk-stack')
         {
             steps {
@@ -80,6 +105,7 @@ pipeline {
                         is_pod_running = sh(script: "kubectl get pod -l io.kompose.service=emofy-login-service -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=emofy-image-storage -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=image-filters -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
+                        is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=emotion-classification -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=minio -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
                         is_pod_running = is_pod_running && sh(script: "kubectl get pod -l app=kibana -o jsonpath='{.items[*].status.phase}'", returnStdout: true).contains("Running")
 
@@ -91,6 +117,7 @@ pipeline {
                             sh 'nohup kubectl port-forward service/emofy-login-service 8085:8085 &'
                             sh 'nohup kubectl port-forward service/emofy-image-storage 8081:8081 &'
                             sh 'nohup kubectl port-forward service/image-filters-service 5000:5000 &'
+                            sh 'nohup kubectl port-forward service/emotion-classification 5050:5050 &'
                             sh 'nohup kubectl port-forward service/minio-console 9001:9001 &'
                             sh 'nohup kubectl port-forward service/kibana 5601:5601 &'
 		                }
