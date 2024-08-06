@@ -46,8 +46,6 @@ spec:
           requests:
             memory: "2Gi"
             cpu: "1"
-            nvidia.com/gpu: 1 # Request 1 GPU
           limits:
             memory: "4Gi"
             cpu: "2"
-            nvidia.com/gpu: 1 # Limit to 1 GPU

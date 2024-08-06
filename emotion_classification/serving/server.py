@@ -1,15 +1,16 @@
 from flask import Flask, request, jsonify
 from utils.face_detector import FaceDetector
 from utils.emotion_detector import EmotionDetector
-from utils.minio import MinioClient
+#from utils.minio import MinioClient
 from utils.logger import set_logger
 import os
 
-app = Flask(__name__)
+log = set_logger('serving')
 
+app = Flask(__name__)
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 minio = MinioClient()
 
-log = set_logger('serving')
 #get the model bucket name from the environment variable
 model_bucket = os.getenv('MODEL_BUCKET')
 model_name = os.getenv('MODEL_NAME')
