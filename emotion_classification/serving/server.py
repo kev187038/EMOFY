@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from utils.face_detector import FaceDetector
 from utils.emotion_detector import EmotionDetector
-#from utils.minio import MinioClient
+from utils.minio import MinioClient
 from utils.logger import set_logger
 import os
 
