@@ -6,11 +6,12 @@ spec:
   schedule: "0 0 1 * *"  # This means the job will run at midnight on the first day of every month
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 3600  # Delete the job 1 hour after completion
       template:
         spec:
           containers:
             - name: emofy-retraining
-              image: placidop/emofy-retraining
+              image: placidop/emofy-retraining:latest
               env:
                 - name: LOGIN_USERNAME
                   valueFrom:
@@ -51,4 +52,4 @@ spec:
                   memory: "4Gi"
                   cpu: "2"
                   nvidia.com/gpu: 1 # Limit to 1 GPU
-          restartPolicy: OnFailure
+          restartPolicy: Never
