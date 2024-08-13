@@ -67,7 +67,33 @@ pipeline {
                 }
             }
         }
+        stage('deploy emotion-classification service')
+        {
+            steps {
+                script {
+                    dir('emotion_classification\\serving') {
 
+                        bat 'kubectl create -f k8\\deployment.yaml'
+                        bat 'kubectl create -f k8\\service.yaml'
+                        bat 'kubectl create -f k8\\login-credentials.yaml'
+                        bat 'kubectl create -f k8\\minio-credentials.yaml'
+                        bat 'kubectl create -f k8\\minio-model.yaml'
+                        bat 'kubectl create -f k8\\service-reader-role.yaml'
+                        bat 'kubectl create -f k8\\service-reader-rolebinding.yaml'
+                    }
+                }
+            }
+        }
+                stage('deploy model retraining cron job')
+        {
+            steps {
+                script {
+                    dir('emotion_classification\\retraining') {
+                        bat 'kubectl create -f k8\\retrain-cron.yaml'
+                    }
+                }
+            }
+        }
         stage('Tunnel to localhost') {
             environment {
                 time_to_sleep = 30
