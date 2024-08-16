@@ -51,3 +51,4 @@ build/
 emotion_classification/retraining/face_detector.py
 emotion_classification/retraining/logger.py
 emotion_classification/retraining/minio.py
+bind.bat
