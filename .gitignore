@@ -32,8 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-#Model files
-*.h5
 
 # Ignore all image files
 *.jpg
@@ -48,3 +46,4 @@ build/
 
 #cache files
 *.pyc
+bind.bat
