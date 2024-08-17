@@ -1,5 +1,6 @@
 copy .\emotion_classification\serving\utils\minio.py .\emotion_classification\retraining\minio.py
 copy .\emotion_classification\serving\utils\face_detector.py .\emotion_classification\retraining\face_detector.py
+copy .\emotion_classification\serving\utils\logger.py .\emotion_classification\retraining\logger.py
 
 call emotion_classification\retraining\script\updatedockerimage.bat
 

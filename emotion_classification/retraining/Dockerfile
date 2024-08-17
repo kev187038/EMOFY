@@ -7,6 +7,7 @@ COPY retraining.py .
 COPY image_retriever.py .
 COPY face_detector.py .
 COPY minio.py .
+COPY logger.py .
 
 
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 libgl1 && \

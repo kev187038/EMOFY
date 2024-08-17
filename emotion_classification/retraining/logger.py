@@ -1,6 +1,6 @@
 import logging
 import logging.handlers
-    
+
 def set_logger(name):
     logger = logging.getLogger(name)
     logstash_handler = logging.handlers.SocketHandler("logstash", 5044)
