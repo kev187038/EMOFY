@@ -1,6 +1,6 @@
 docker login
 cd emotion_classification/serving
-docker build -t emotion_classification:latest .
+docker build -t emotion-detector:latest .
 cd ../..
-docker tag image_filter:latest siralex01/emotion_classification:latest
-docker push siralex01/emotion_classification:latest
+docker tag emotion-detector:latest siralex01/emotion-detector:latest
+docker push siralex01/emotion-detector:latest
