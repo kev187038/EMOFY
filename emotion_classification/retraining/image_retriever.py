@@ -55,7 +55,7 @@ class ImageRetriever:
 
     def get_image_names(self):
         try: 
-            response = requests.get(self.images_url + f'/{self.login_data["id"]}', cookies=self.cookies) #TODO:CAPIRE COME OTTENERE L'ID
+            response = requests.get(self.images_url + f'{self.login_data["id"]}', cookies=self.cookies) #TODO:CAPIRE COME OTTENERE L'ID
             response.raise_for_status()
             try: data = json.loads(response.text)['data']
             except json.decoder.JSONDecodeError: return []
