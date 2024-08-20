@@ -19,13 +19,13 @@ CORS(app, resources={r"/apply_filter": {"origins": "http://localhost:8081"}})
 
 @app.route('/apply_filter', methods=['POST'])
 def apply_filter():
-    logger.info(f'Filter requested by {request.remote_addr}')
+    logger.info(f'[EMOFY] : Filter requested by {request.remote_addr}')
     try:
         data = request.get_json()
         image = Image(data['image'])
         filter = data['filter']
         filtered_image = image.apply_filter(filter)
-        logger.info(f'Sending filtered image to {request.remote_addr}')
+        logger.info(f'[EMOFY] : Sending filtered image to {request.remote_addr}')
         return jsonify({'filtered_image': filtered_image})
     except Exception as e:
         logger.error(f'Error: {str(e)}')

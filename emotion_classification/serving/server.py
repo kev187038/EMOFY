@@ -30,7 +30,7 @@ else:
 
 @app.route('/detect_face', methods=['POST'])
 def detect_face():
-    log.info('Face detection request received')
+    log.info('[EMOFY] : Face detection request received')
     data = request.json
     base64_img = data['image']
     
@@ -45,19 +45,19 @@ def detect_face():
 
 @app.route('/detect_emotion', methods=['POST'])
 def detect_emotion():
-    log.info('Emotion detection request received')
+    log.info('[EMOFY] : Emotion detection request received')
     data = request.json
     base64_img = data['image']
     emotion = EmotionDetector().detect_emotion(base64_img)
-    log.info(f'Emotion detected: {emotion}')
+    log.info(f'[EMOFY] : Emotion detected: {emotion}')
     return jsonify({'emotion': emotion})
 
 if __name__ == '__main__':
     from waitress import serve
-    log.info('Starting the server')
+    log.info('[EMOFY] : Starting the server for emotion classification')
     try:
         serve(app, host='0.0.0.0', port=5050)
     except Exception as e:
         log.error(f'Error: {e}')
-        log.error('Shutting down the server')
+        log.error('[EMOFY] : Shutting down the server for emotion classification')
         exit(1)
