@@ -18,17 +18,17 @@ from logger import set_logger
 # script periodico per aggiornamento modello
 
 logger = set_logger('retraining')
-logger.info('Starting retraining script')
+logger.info('[EMOFY] : Starting retraining script')
 
 # Download del dataset
 v1 = client.CoreV1Api()
 service = v1.read_namespaced_service(name='emofy-login-service', namespace='default')
 login_page_url = f"http://{service.spec.cluster_ip}:{service.spec.ports[0].port}/login"
-logger.info(f'Login page URL: {login_page_url}')
+logger.info(f'[EMOFY] : Login page URL: {login_page_url}')
 
 service = v1.read_namespaced_service(name='emofy-image-service', namespace='default')
 images_url = f"http://{service.spec.cluster_ip}:{service.spec.ports[0].port}/api/images/"
-logger.info(f'Images URL: {images_url}')
+logger.info(f'[EMOFY] : Images URL: {images_url}')
 
 login_data = {
     'username': os.getenv('LOGIN_USERNAME'),
@@ -36,20 +36,20 @@ login_data = {
     'id': "1"
 }
 
-logger.info('Retrieving images')
+logger.info('[EMOFY] : Retrieving images')
 retriever = ImageRetriever(login_page_url, images_url, login_data)
 images = retriever.get_image_names()
-logger.info(f'Total images retrieved: {len(images)}')
+logger.info(f'[EMOFY] : Total images retrieved: {len(images)}')
 
 monitor = CronJobMonitor('default', 'emofy-retraining')
 last_timestamp = monitor.last_execution()
 if last_timestamp:
-    logger.info(f'Filtering images based on last execution timestamp: {last_timestamp}')
+    logger.info(f'[EMOFY] : Filtering images based on last execution timestamp: {last_timestamp}')
     images = [image for image in images if image['timestamp'] > last_timestamp]
 
 # Keep only those images having the key 'label'
 images = [image for image in images if 'label' in image]
-logger.info(f'Total labeled images: {len(images)}')
+logger.info(f'[EMOFY] : Total labeled images: {len(images)}')
 
 incremental_dir = 'incremental_learning_images'
 images_path = []
@@ -57,12 +57,12 @@ for image in images:
     folder = '{}/{}'.format(incremental_dir, image['label'])
     if not os.path.exists(folder):
         os.makedirs(folder)
-        logger.info(f'Created directory: {folder}')
+        logger.info(f'[EMOFY] : Created directory: {folder}')
     path = os.path.join(folder, image['filename'])
     images_path.append(path)
     with open(path, 'wb') as f:
         f.write(retriever.get_image(image['id']))
-        logger.info(f'Downloaded and saved image: {path}')
+        logger.info(f'[EMOFY] : Downloaded and saved image: {path}')
 
 # Now, replace each image with only the face
 face_detector = FaceDetector()
@@ -71,33 +71,33 @@ for path in images_path:
     face_img = face_detector.detect_face(img, decode=False)
     if face_img is False:
         os.remove(path)
-        logger.info(f'Removed image without detectable face: {path}')
+        logger.info(f'[EMOFY] : Removed image without detectable face: {path}')
     else:
         cv2.imwrite(path, face_img)
-        logger.info(f'Saved face image: {path}')
+        logger.info(f'[EMOFY] : Saved face image: {path}')
 
 # 3) Aggiornamento del modello
 minio = MinioClient()
 model_bucket = os.getenv('MODEL_BUCKET')
 
-logger.info('Retrieving models from Minio')
+logger.info('[ENOFY] : Retrieving models from Minio')
 models = [{'name': model.object_name, 'time': model.last_modified} for model in minio.list_files(model_bucket)]
 models.sort(key=lambda x: x['time'])
-logger.info(f'Models available: {models}')
+logger.info(f'[ENOFY] : Models available: {models}')
 
 if models:
     model_name = models[-1]['name']
     minio.download_file('models', model_name, 'model.h5')
-    logger.info(f'Downloaded model: {model_name}')
+    logger.info(f'[EMOFY] : Downloaded model: {model_name}')
     model = load_model('model.h5')
-    logger.info('Loaded model from file')
+    logger.info('[EMOFY] : Loaded model from file')
 else:
-    logger.error('No models found in the bucket')
+    logger.error('[EMOFY] : No models found in the bucket')
     sys.exit(1)
 
 # Recompile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-logger.info('Model compiled')
+logger.info('[EMOFY] : Model compiled')
 
 new_data_dir = 'incremental_learning_images'
 emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
@@ -106,7 +106,7 @@ emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 for folder in os.listdir(new_data_dir):
     if folder not in emotions:
         os.rmdir(os.path.join(new_data_dir, folder))
-        logger.info(f'Removed unused directory: {folder}')
+        logger.info(f'[EMOFY] : Removed unused directory: {folder}')
 
 num_images = 0
 for emotion in emotions:
@@ -117,13 +117,13 @@ for emotion in emotions:
     num_images += len(os.listdir(emotion_dir))
 
 if num_images == 0:
-    logger.info('No new images to train on. Exiting.')
+    logger.info('[EMOFY] : No new images to train on. Exiting.')
     sys.exit(0)
 
 # Create an ImageDataGenerator without data augmentation for the new data
 new_data_datagen = ImageDataGenerator(rescale=1.0/255)
 
-logger.info(f'Total number of new images: {num_images}')
+logger.info(f'[EMOFY] : Total number of new images: {num_images}')
 
 # Create a generator to read images from the new data directory
 new_data_generator = new_data_datagen.flow_from_directory(
@@ -134,7 +134,7 @@ new_data_generator = new_data_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
-logger.info('Starting model retraining')
+logger.info('[ENOFY] : Starting model retraining')
 history = model.fit(
     new_data_generator,
     steps_per_epoch=new_data_generator.samples // new_data_generator.batch_size,
@@ -144,7 +144,7 @@ history = model.fit(
 # Save the updated model
 model_name = 'model_' + time.strftime('%Y%m%d%H%M%S') + '.h5'
 model.save(model_name)
-logger.info(f'Model saved as: {model_name}')
+logger.info(f'[EMOFY] : Model saved as: {model_name}')
 
 minio.upload_file('models', model_name, model_name)
-logger.info(f'Uploaded model to Minio: {model_name}')
+logger.info(f'[EMOFY] : Uploaded model to Minio: {model_name}')

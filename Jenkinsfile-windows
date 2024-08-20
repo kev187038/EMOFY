@@ -118,7 +118,7 @@ pipeline {
                             bat 'start /b cmd /c "kubectl port-forward service/emofy-login-service 8085:8085"'
                             bat 'start /b cmd /c "kubectl port-forward service/emofy-image-storage 8081:8081"'
                             bat 'start /b cmd /c "kubectl port-forward service/image-filters-service 5000:5000"'
-                            bat 'start /b cmd /c "kubectl port-forward service/emotion-detector 5050:5050"'
+                            bat 'start /b cmd /c "kubectl port-forward service/emotion-detector-service 5050:5050"'
                             bat 'start /b cmd /c "kubectl port-forward service/minio-console 9001:9001"'
                             bat 'start /b cmd /c "kubectl port-forward service/kibana 5601:5601"'
 		                }

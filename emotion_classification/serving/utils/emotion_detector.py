@@ -35,8 +35,13 @@ class EmotionDetector:
         return {'emotion': emotion}
 
     def _preprocess_image(self, image):
-        # Convert to grayscale
-        gray_img = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        # Check if the image is already grayscale
+        if len(image.shape) == 3 and image.shape[2] == 3:
+            # Convert to grayscale if it is not already
+            gray_img = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        else:
+            # If it's already grayscale, just use it as is
+            gray_img = image
         # Resize the image to match model input
         resized_img = cv2.resize(gray_img, (48, 48))
         # Normalize the image
