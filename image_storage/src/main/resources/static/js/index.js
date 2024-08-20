@@ -142,40 +142,89 @@ document.getElementById('upload-button').addEventListener('click', function() {
     uploadFiles();
 });
 
-// Function to upload files to the API
+// Function to convert an image file (PNG or JPG) to Base64
+function getBase64ImageFromFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                // Detect the file type and create a data URL accordingly
+                const dataURL = canvas.toDataURL(file.type);
+                resolve(dataURL.replace(/^data:image\/(png|jpeg);base64,/, "")); // Handles both PNG and JPEG
+            };
+            img.onerror = function(err) {
+                reject(err);
+            };
+            img.src = event.target.result; // Load the image with the file data
+        };
+        reader.onerror = function(error) {
+            reject(error);
+        };
+        reader.readAsDataURL(file); // Read the file as a data URL
+    });
+}
+
+// Function to handle file uploads
 function uploadFiles() {
     if (pendingFiles.length > 0) {
         const uploadPromises = pendingFiles.map(file => {
-            const formData = new FormData();
-            formData.append('file', file);
-       
-            return fetch(`api/images/${userId}`, {
-                method: 'POST',
-                headers: {
-                    [csrfHeader]: csrfToken
-                },
-                body: formData,
-            })
-            .then(response => {
-                if (response.ok) {
-                    return { fileName: file.name, status: 'uploaded successfully' };
-                } else {
-                    return { fileName: file.name, status: 'failed to upload' };
-                }
-            })
-            .catch(error => {
-                console.error(`Error uploading ${file.name}:`, error);
-                return { fileName: file.name, status: 'failed to upload' };
-            });
+            return getBase64ImageFromFile(file) // Convert the file to Base64
+                .then(base64Image => {
+
+                    // Send a request to /detect_face
+                    return fetch('http://localhost:5050/detect_face', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image: base64Image })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.face_detected) {
+                            // If a face is detected, proceed with the file upload
+                            const formData = new FormData();
+                            formData.append('file', file);
+
+                            return fetch(`api/images/${userId}`, {
+                                method: 'POST',
+                                headers: {
+                                    [csrfHeader]: csrfToken
+                                },
+                                body: formData,
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return { fileName: file.name, status: 'uploaded successfully' };
+                                } else {
+                                    return { fileName: file.name, status: 'failed to upload' };
+                                }
+                            });
+                        } else {
+                            return { fileName: file.name, status: 'No face detected, upload skipped' };
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error(`Error processing ${file.name}:`, error);
+                    return { fileName: file.name, status: 'failed to process' };
+                });
         });
-       
+
         // Wait for all uploads to complete
         Promise.all(uploadPromises)
         .then(results => {
-            // Run fetchUserImages after the timeout
+            // Execute fetchUserImages after a timeout
             setTimeout(fetchUserImages, 1000);
 
-            // Show all status messages
+            // Display all status messages
             showStatusMessages(results);
 
             // Clear pendingFiles after upload completion
@@ -183,6 +232,7 @@ function uploadFiles() {
         });
     }
 }
+
 
 function showStatusMessages(results) {
     const statusElement = document.getElementById('status-message');
@@ -209,6 +259,8 @@ function showStatusMessages(results) {
 }
 
 function displayImage(fileKey) {
+    const labelElement = document.querySelector('label[for="image-label"]');
+    labelElement.innerHTML = "Select the correct emotion!"
     fetch(`/api/images/${fileKey}`, {
         method: 'GET',
         headers: {
@@ -228,8 +280,7 @@ function displayImage(fileKey) {
         const labelDropdown = document.getElementById('image-label');
         if (label) {
             labelDropdown.value = label;
-        }
-        else {
+        } else {
             labelDropdown.value = "";
         }
         return response.blob();
@@ -239,6 +290,37 @@ function displayImage(fileKey) {
         const selectedImage = document.getElementById('selected-image');
         selectedImage.src = imageUrl;
         selectedImage.setAttribute('data-file-key', fileKey);
+
+        // Convert the blob to an image element
+        const img = new Image();
+        img.onload = function() {
+            // Use getBase64Image to convert image to Base64
+            const base64Image = getBase64Image(img);
+                
+            // Fetch to /detect_emotion
+            fetch('http://localhost:5050/detect_emotion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: base64Image })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const labelDropdown = document.getElementById('image-label');
+                if (data.emotion) {
+                    labelElement.innerHTML = "The predicted emotion is " + data.emotion.emotion + ". Select the correct one!";
+                } else {
+                    console.error('No emotion detected.');
+                    showStatusMessages([{ fileName: selectedImage.getAttribute('data-file-name'), status: 'No emotion detected.' }]);
+                }
+            })
+            .catch(error => {
+                console.error('Error detecting emotion:', error);
+                showStatusMessages([{ fileName: selectedImage.getAttribute('data-file-name'), status: `Failed to detect emotion: ${error.message}` }]);
+            });
+        };
+        img.src = imageUrl;
 
         // Show the selected-image container and the filters dropdown
         const selectedImageContainer = document.getElementById('selected-image-container');
@@ -265,6 +347,7 @@ function displayImage(fileKey) {
     })
     .catch(error => {
         console.error('Error fetching image:', error);
+        showStatusMessages([{ fileName: 'unknown', status: `Failed to fetch image: ${error.message}` }]);
     });
 }
 
@@ -451,10 +534,31 @@ document.getElementById('store-button').addEventListener('click', function() {
 });
 
 function uploadFilteredImage(base64Image, fileName) {
-    const blob = base64ToBlob(base64Image, 'image/png');
-    
-    uploadImage(blob, fileName);
-        
+    // Step 1: Send the image to /detect_face endpoint
+    fetch('http://localhost:5050/detect_face', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image: base64Image })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.face_detected) {
+            // Step 2: If a face is detected, convert base64 to Blob and upload the image
+            const blob = base64ToBlob(base64Image, 'image/png');
+            uploadImage(blob, fileName);
+
+        } else {
+            // No face detected, update status message
+            showStatusMessages([{ fileName, status: 'No face detected, upload skipped' }]);
+        }
+    })
+    .catch(error => {
+        // Handle fetch or processing errors
+        console.error('Error detecting face:', error);
+        showStatusMessages([{ fileName, status: `Failed to process: ${error.message}` }]);
+    });
 }
 
 function uploadImage(blob, fileName) {
