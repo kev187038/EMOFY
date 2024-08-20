@@ -9,9 +9,9 @@ from cronjob_monitor import CronJobMonitor
 from image_retriever import ImageRetriever
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-config.load_kube_config()
+config.load_incluster_config()
 from face_detector import FaceDetector
-from minio import MinioClient
+from minio_client import MinioClient
 import time
 from logger import set_logger
 
@@ -41,7 +41,7 @@ retriever = ImageRetriever(login_page_url, images_url, login_data)
 images = retriever.get_image_names()
 logger.info(f'Total images retrieved: {len(images)}')
 
-monitor = CronJobMonitor('default', 'retrain-cronjob')
+monitor = CronJobMonitor('default', 'emofy-retraining')
 last_timestamp = monitor.last_execution()
 if last_timestamp:
     logger.info(f'Filtering images based on last execution timestamp: {last_timestamp}')
