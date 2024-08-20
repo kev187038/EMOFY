@@ -36,12 +36,12 @@ spec:
                 - name: MODEL_BUCKET
                   valueFrom:
                     configMapKeyRef:
-                      name: emofy-model-config
+                      name: minio-model-config
                       key: MODEL_BUCKET
                 - name: MODEL_NAME
                   valueFrom:
                     configMapKeyRef:
-                      name: emofy-model-config
+                      name: minio-model-config
                       key: MODEL_NAME
               resources:
                 requests:
