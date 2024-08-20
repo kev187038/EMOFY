@@ -7,3 +7,6 @@ rules:
 - apiGroups: [""]
   resources: ["services"]
   verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources: ["cronjobs"]
+  verbs: ["get", "list", "watch"]
