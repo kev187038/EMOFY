@@ -87,9 +87,9 @@ logger.info(f'[ENOFY] : Models available: {models}')
 
 if models:
     model_name = models[-1]['name']
-    minio.download_file('models', model_name, 'model.h5')
+    minio.download_file('models', model_name, model_name)
     logger.info(f'[EMOFY] : Downloaded model: {model_name}')
-    model = load_model('model.h5')
+    model = load_model(model_name)
     logger.info('[EMOFY] : Loaded model from file')
 else:
     logger.error('[EMOFY] : No models found in the bucket')
@@ -113,7 +113,7 @@ for emotion in emotions:
     emotion_dir = os.path.join(new_data_dir, emotion)
     if not os.path.exists(emotion_dir):
         os.makedirs(emotion_dir)
-        logger.info(f'Created directory for emotion: {emotion}')
+        #logger.info(f'Created directory for emotion: {emotion}')
     num_images += len(os.listdir(emotion_dir))
 
 if num_images == 0:
@@ -134,7 +134,7 @@ new_data_generator = new_data_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
-logger.info('[ENOFY] : Starting model retraining')
+logger.info('[EMOFY] : Starting model retraining')
 history = model.fit(
     new_data_generator,
     steps_per_epoch=new_data_generator.samples // new_data_generator.batch_size,
@@ -142,7 +142,7 @@ history = model.fit(
 )
 
 # Save the updated model
-model_name = 'model_' + time.strftime('%Y%m%d%H%M%S') + '.h5'
+model_name = 'model_' + time.strftime('%Y%m%d%H%M%S') + '.keras'
 model.save(model_name)
 logger.info(f'[EMOFY] : Model saved as: {model_name}')
 
