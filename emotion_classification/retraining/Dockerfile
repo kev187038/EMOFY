@@ -18,5 +18,6 @@ COPY minio_client.py .
 COPY logger.py .
 COPY cronjob_monitor.py .
 
-CMD ["sh", "-c", "tail -f /dev/null"]
-#ENTRYPOINT ["python", "retraining.py"]
+ENTRYPOINT ["python", "retraining.py"]
+
+#CMD ["sh", "-c", "tail -f /dev/null"]
