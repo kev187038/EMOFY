@@ -26,7 +26,7 @@ service = v1.read_namespaced_service(name='emofy-login-service', namespace='defa
 login_page_url = f"http://{service.spec.cluster_ip}:{service.spec.ports[0].port}/login"
 logger.info(f'[EMOFY] : Login page URL: {login_page_url}')
 
-service = v1.read_namespaced_service(name='emofy-image-service', namespace='default')
+service = v1.read_namespaced_service(name='emofy-image-storage', namespace='default')
 images_url = f"http://{service.spec.cluster_ip}:{service.spec.ports[0].port}/api/images/"
 logger.info(f'[EMOFY] : Images URL: {images_url}')
 
@@ -80,10 +80,10 @@ for path in images_path:
 minio = MinioClient()
 model_bucket = os.getenv('MODEL_BUCKET')
 
-logger.info('[ENOFY] : Retrieving models from Minio')
+logger.info('[EMOFY] : Retrieving models from Minio')
 models = [{'name': model.object_name, 'time': model.last_modified} for model in minio.list_files(model_bucket)]
 models.sort(key=lambda x: x['time'])
-logger.info(f'[ENOFY] : Models available: {models}')
+logger.info(f'[EMOFY] : Models available: {models}')
 
 if models:
     model_name = models[-1]['name']
