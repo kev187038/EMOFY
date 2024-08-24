@@ -19,14 +19,29 @@ minio = MinioClient()
 
 #get the model bucket name from the environment variable
 model_bucket = os.getenv('MODEL_BUCKET')
-model_name = os.getenv('MODEL_NAME')
+model_name = None
+detector = None
+
+def latest_model_available():
+    models = [{'name': model.object_name, 'time': model.last_modified} for model in minio.list_files(model_bucket)]
+    models.sort(key=lambda x: x['time'])
+    new_model_name = models[-1]['name']
+    return new_model_name
+
+def update_model():
+    global model_name
+    new_model_name = latest_model_available()
+    if not model_name or new_model_name != model_name: #if the latest model is different from the current model
+        model_name = new_model_name
+        minio.download_file(model_bucket, new_model_name, 'model.keras')
+        log.info(f'[EMOFY] : Downloaded new model {new_model_name}')
+    global detector
+    detector = EmotionDetector()
+    log.info('[EMOFY] : Now using new model for emotion detection')
 
 if not minio.minio_client.bucket_exists(model_bucket):
     minio.minio_client.make_bucket(model_bucket)
-    minio.upload_file(model_bucket, model_name, model_name)
-else:
-    minio.download_file(model_bucket, model_name, model_name) #TODO: Rendi ultimo modello disponibile
-
+    minio.upload_file(model_bucket, "model.keras", "model.keras")
 
 @app.route('/detect_face', methods=['POST'])
 def detect_face():
@@ -46,9 +61,10 @@ def detect_face():
 @app.route('/detect_emotion', methods=['POST'])
 def detect_emotion():
     log.info('[EMOFY] : Emotion detection request received')
+    update_model()
     data = request.json
     base64_img = data['image']
-    emotion = EmotionDetector().detect_emotion(base64_img)
+    emotion = detector.detect_emotion(base64_img)
     log.info(f'[EMOFY] : Emotion detected: {emotion}')
     return jsonify({'emotion': emotion})
 
