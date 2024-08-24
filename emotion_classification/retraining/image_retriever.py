@@ -17,6 +17,7 @@ class ImageRetriever:
     def __init__(self, login_url, images_url, login_data):
         self.login_url = login_url
         self.images_url = images_url
+        self.images_url = self.images_url if self.images_url.endswith('/') else self.images_url + '/'
         self.login_data = login_data
         with requests.Session() as session:
             csrf_token_name, csrf_token_value = self.get_csrf_token(session)
@@ -65,8 +66,8 @@ class ImageRetriever:
 
     def get_image(self, image_name):
         try:
-            print(f'{self.images_url}/{image_name}')
-            response = requests.get(f'{self.images_url}/{image_name}', cookies=self.cookies)
+            print(f'{self.images_url}{image_name}')
+            response = requests.get(f'{self.images_url}{image_name}', cookies=self.cookies)
             response.raise_for_status()
             return response.content
         except requests.RequestException as e:
