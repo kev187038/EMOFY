@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: emotion-detector-container
-        image: siralex01/emotion-detector:latest
+        image: placidop/emotion-detector:latest
         ports:
         - containerPort: 5050
         env:
@@ -37,11 +37,6 @@ spec:
             configMapKeyRef:
               name: minio-model-config
               key: MODEL_BUCKET
-        - name: MODEL_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: minio-model-config
-              key: MODEL_NAME
         resources:
           requests:
             memory: "2Gi"

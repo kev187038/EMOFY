@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: emofy-retraining
-              image: siralex01/emofy-retraining:latest
+              image: placidop/emofy-retraining:latest
               env:
                 - name: LOGIN_USERNAME
                   valueFrom:
@@ -38,11 +38,6 @@ spec:
                     configMapKeyRef:
                       name: minio-model-config
                       key: MODEL_BUCKET
-                - name: MODEL_NAME
-                  valueFrom:
-                    configMapKeyRef:
-                      name: minio-model-config
-                      key: MODEL_NAME
               resources:
                 requests:
                   memory: "2Gi"

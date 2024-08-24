@@ -4,4 +4,3 @@ metadata:
   name: minio-model-config
 data:
   MODEL_BUCKET: "models"
-  MODEL_NAME: "model.h5"
