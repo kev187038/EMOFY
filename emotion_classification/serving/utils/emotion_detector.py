@@ -13,7 +13,7 @@ class EmotionDetector:
         
         self.face_detector = FaceDetector()
         # Load the pre-trained emotion recognition model
-        self.model = load_model('model.h5')
+        self.model = load_model('model.keras')
         # Emotion labels
         self.emotion_labels = {0: 'angry', 1: 'disgust', 2: 'fear', 3: 'happy', 4: 'neutral', 5: 'sad', 6: 'surprise'}
 
