@@ -5,11 +5,11 @@ WORKDIR /emotion_classification
 COPY utils/emotion_detector.py utils/emotion_detector.py
 COPY utils/face_detector.py utils/face_detector.py
 COPY utils/logger.py utils/logger.py
-COPY utils/minio.py utils/minio.py
+COPY utils/minio_client.py utils/minio_client.py
 
 COPY requirements.txt .
 
-COPY model.h5 . 
+COPY model.keras . 
 COPY server.py .
 
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 libgl1 && \
