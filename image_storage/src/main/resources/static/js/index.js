@@ -179,7 +179,7 @@ function uploadFiles() {
                 .then(base64Image => {
 
                     // Send a request to /detect_face
-                    return fetch('http://localhost:5050/detect_face', {
+                    return fetch(detect_face_microservice, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -298,7 +298,7 @@ function displayImage(fileKey) {
             const base64Image = getBase64Image(img);
                 
             // Fetch to /detect_emotion
-            fetch('http://localhost:5050/detect_emotion', {
+            fetch(detect_emotion_microservice, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -484,14 +484,12 @@ function getBase64Image(img) {
 }
 
 function applyFilter(fileKey, filter, base64Image) {
-    const url = 'http://localhost:5000/apply_filter';
-
     const payload = {
         image: base64Image,
         filter: filter
     };
 
-    fetch(url, {
+    fetch(apply_filter_microservice, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -535,7 +533,7 @@ document.getElementById('store-button').addEventListener('click', function() {
 
 function uploadFilteredImage(base64Image, fileName) {
     // Step 1: Send the image to /detect_face endpoint
-    fetch('http://localhost:5050/detect_face', {
+    fetch(detect_face_microservice, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

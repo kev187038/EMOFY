@@ -10,9 +10,13 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <!-- Provide userID and csrf token from backend -->
     <script th:inline="javascript">
-        var userId = /*[[${userId}]]*/ 'defaultUserId';
+        const userId = /*[[${userId}]]*/ 'defaultUserId';
         var csrfToken = /*[[${_csrf.token}]]*/ 'defaultCsrfToken';
         var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+        const detect_face_microservice =  /*[[${detectFaceServiceUrl}]]*/ '';
+        const detect_emotion_microservice = /*[[${detectEmotionServiceUrl}]]*/ '';
+        const apply_filter_microservice = /*[[${applyFilterServiceUrl}]]*/ '';
+
         console.log("User ID from Thymeleaf: ", userId, typeof(userId));
     </script>
 </head>
