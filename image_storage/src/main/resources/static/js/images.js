@@ -109,3 +109,6 @@ function loadMoreImages() {
     }
 }
 
+document.getElementById('help-button').addEventListener('click', function() {
+    window.location.href = '/help';
+});

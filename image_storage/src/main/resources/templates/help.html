@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - Emofy</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<script th:inline="javascript">
+    var csrfToken = /*[[${_csrf.token}]]*/ 'defaultCsrfToken';
+    var csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        document.getElementById('logout-button').addEventListener('click', function() {  
+            fetch('logout', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/";
+                } else {
+                    console.error('Logout failed');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+<body>
+    <header class="bg-primary text-white py-3">
+        <nav class="container d-flex justify-content-between align-items-center position-relative">
+            <div>
+                <a class="nav-link text-white d-inline" href="/">Home</a>
+                <a class="nav-link text-white d-inline" href="/about">About Us</a>
+            </div>
+            <div class="ms-auto">
+                <button id="help-button" class="btn btn-outline-light me-2">Need Help?</button>
+                <button id="logout-button" class="btn btn-outline-light">Logout</button>
+            </div>
+        </nav>        
+    </header>
+    
+    <main class="container py-5">
+        <h1 class="mb-4">Help Center</h1>
+        <p class="lead">Welcome to the Emofy help center! This guide will help you understand how to use our image analysis service efficiently.</p>
+        
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Uploading Images</h2>
+                <p class="card-text">To upload images, you can:</p>
+                <ul>
+                    <li>Drag and drop them into the designated upload area on the home page</li>
+                    <li>Click inside the upload box to select images from your device</li>
+                </ul>
+                <p class="card-text">Supported image formats include JPG, PNG, and other common formats. After uploading, only images containing faces will be stored in your account for further analysis.</p>
+            </div>
+        </section>
+        
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Your Images</h2>
+                <p class="card-text">Once images are uploaded, they will appear in the "Your Images" section. Here, you can:</p>
+                <ul>
+                    <li>Select an image to view the results of the facial expression recognition model</li>
+                    <li>Correct the model's prediction using a dropdown list if it doesn't match the actual expression</li>
+                </ul>
+                <p class="card-text">Your feedback is valuable and helps improve the model's accuracy over time. Currently, the model's prediction accuracy exceeds 60%.</p>
+            </div>
+        </section>
+        
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Editing Images</h2>
+                <p class="card-text">For each image, you have the option to apply various filters. To modify an image:</p>
+                <ol>
+                    <li>Select the desired filters from the dropdown menu</li>
+                    <li>Adjust the filters as needed</li>
+                    <li>Click "Store Result" to save the modified image in your library</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Managing Images</h2>
+                <p class="card-text">To remove an image from your library:</p>
+                <ol>
+                    <li>Select the image you want to delete</li>
+                    <li>Click the "Delete Image" button</li>
+                </ol>
+                <p class="card-text text-danger">Be aware that this action is permanent and cannot be undone.</p>
+            </div>
+        </section>
+    </main>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

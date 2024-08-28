@@ -13,6 +13,10 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('help-button').addEventListener('click', function() {
+                window.location.href = '/help';
+            });
+
             document.getElementById('logout-button').addEventListener('click', function() {  
                 fetch('logout', {
                     method: 'POST',

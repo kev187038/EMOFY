@@ -30,4 +30,10 @@ public class ServiceController {
 
         return "aboutus";
     }
+
+    @GetMapping("/help")
+    public String getHelp(HttpServletRequest httpServletRequest, Model model) {
+
+        return "help";
+    }
 }
