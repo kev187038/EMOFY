@@ -9,13 +9,6 @@ class MinioClient:
         service = v1.read_namespaced_service(name=self.service_name, namespace='default')
         minio_service = f"{service.spec.cluster_ip}:{service.spec.ports[0].port}"
 
-        ############DEBUG
-        #minio_service = "localhost:58073"
-
-        #os.environ['MINIO_ACCESS_KEY'] = 'R0h1ZlRjbjZ1Z2ZobDN0YVVvWXQ'
-        #os.environ['MINIO_SECRET_KEY'] = 'ZXU0b0N2UHp5SHducWlyOU5DQkNsMEZoVWVBSGloMFV5RnFpSWNSaA'
-
-        ################
         self.minio_client = Minio(
             minio_service,  # Replace with your MinIO server URL
             access_key=os.getenv('MINIO_ACCESS_KEY'),  # Replace with your access key
@@ -28,8 +21,6 @@ class MinioClient:
 
     def download_file(self, bucket:str, minio_filename:str, path:str=None):
         if not path: path = minio_filename
-        print(os.environ['MINIO_ACCESS_KEY'])
-        print(os.environ['MINIO_SECRET_KEY'])
         self.minio_client.fget_object(bucket, minio_filename, path)
 
     def upload_file(self, bucket:str, minio_filename:str, path:str):
