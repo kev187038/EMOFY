@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: emotion-detector-container
-        image: placidop/emotion-detector:latest
+        image: siralex/emotion-detector:latest
         ports:
         - containerPort: 5050
         env:

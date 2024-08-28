@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: emofy-retraining
-              image: placidop/emofy-retraining:latest
+              image: siralex/emofy-retraining:latest
               env:
                 - name: LOGIN_USERNAME
                   valueFrom:
