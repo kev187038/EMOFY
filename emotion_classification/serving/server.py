@@ -35,9 +35,9 @@ def update_model():
         model_name = new_model_name
         minio.download_file(model_bucket, new_model_name, 'model.keras')
         log.info(f'[EMOFY] : Downloaded new model {new_model_name}')
+        log.info('[EMOFY] : Now using new model for emotion detection')
     global detector
     detector = EmotionDetector()
-    log.info('[EMOFY] : Now using new model for emotion detection')
 
 if not minio.minio_client.bucket_exists(model_bucket):
     minio.minio_client.make_bucket(model_bucket)
