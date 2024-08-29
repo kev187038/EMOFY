@@ -17,7 +17,7 @@ pipeline {
 
                     if (params.USE_GPU) {
                         // Add GPU-specific parameters if USE_GPU is true
-                        minikubeCmd += " --driver=docker --gpus all"
+                        minikubeCmd = "minikube start --driver=docker --gpus all --nodes=${nodes}"
                     }
 
                     // Start Minikube
