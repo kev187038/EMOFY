@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    parameters {
+        booleanParam(name: 'USE_GPU', defaultValue: false, description: 'Enable GPU support in Minikube')
+    }
+
     stages {
         stage('Start minikube') {
             environment {
@@ -7,7 +12,23 @@ pipeline {
             }
             steps {
                 script {
-                    sh "minikube start --nodes=${nodes}"
+                    // Base Minikube start command
+                    def minikubeCmd = "minikube start --nodes=${nodes}"
+
+                    if (params.USE_GPU) {
+                        // Add GPU-specific parameters if USE_GPU is true
+                        minikubeCmd = "minikube start --driver=docker --gpus all --nodes=${nodes}"
+                    }
+
+                    // Start Minikube
+                    bat minikubeCmd
+
+                    if (params.USE_GPU) {
+                        // Enable GPU addons if USE_GPU is true
+                        bat "minikube addons enable nvidia-driver-installer"
+                        bat "minikube addons enable nvidia-gpu-device-plugin"
+                        bat "minikube addons enable nvidia-device-plugin"
+                    }
                 }
             }
         }
