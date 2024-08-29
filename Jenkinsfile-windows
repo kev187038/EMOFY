@@ -13,11 +13,11 @@ pipeline {
             steps {
                 script {
                     // Base Minikube start command
-                    def minikubeCmd = "minikube start --driver=docker --nodes=${nodes}"
+                    def minikubeCmd = "minikube start  --nodes=${nodes}"
 
                     if (params.USE_GPU) {
                         // Add GPU-specific parameters if USE_GPU is true
-                        minikubeCmd += " --gpus all"
+                        minikubeCmd += "--driver=docker --gpus all"
                     }
 
                     // Start Minikube
