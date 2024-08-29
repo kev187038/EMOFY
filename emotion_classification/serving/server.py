@@ -64,9 +64,13 @@ def detect_emotion():
     update_model()
     data = request.json
     base64_img = data['image']
+    file_key = data['fileKey']  # Get the fileKey from the request
     emotion = detector.detect_emotion(base64_img)
     log.info(f'[EMOFY] : Emotion detected: {emotion}')
-    return jsonify({'emotion': emotion})
+    return jsonify({
+        'emotion': emotion,
+        'fileKey': file_key  # Include the fileKey in the response
+    })
 
 if __name__ == '__main__':
     from waitress import serve

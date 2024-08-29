@@ -1,4 +1,4 @@
-del .\emotion_classification\retraining\minio.py
+del .\emotion_classification\retraining\minio_client.py
 del .\emotion_classification\retraining\face_detector.py
 del .\emotion_classification\retraining\logger.py
 

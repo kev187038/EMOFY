@@ -287,7 +287,7 @@ function displayImage(fileKey) {
     })
     .then(blob => {
         const imageUrl = URL.createObjectURL(blob);
-        const selectedImage = document.getElementById('selected-image');
+        var selectedImage = document.getElementById('selected-image');
         selectedImage.src = imageUrl;
         selectedImage.setAttribute('data-file-key', fileKey);
 
@@ -303,12 +303,17 @@ function displayImage(fileKey) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ image: base64Image })
+                body: JSON.stringify({ 
+                    image: base64Image,
+                    fileKey: fileKey  // Include the fileKey in the request
+                })
             })
             .then(response => response.json())
             .then(data => {
                 const labelDropdown = document.getElementById('image-label');
-                if (data.emotion) {
+                selectedImage = document.getElementById('selected-image');
+
+                if (data.emotion && data.fileKey === selectedImage.getAttribute('data-file-key')) {
                     labelElement.innerHTML = "The predicted emotion is " + data.emotion.emotion + ". Select the correct one!";
                 } else {
                     console.error('No emotion detected.');

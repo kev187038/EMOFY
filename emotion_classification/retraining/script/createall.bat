@@ -1,4 +1,4 @@
-copy .\emotion_classification\serving\utils\minio_client.py .\emotion_classification\retraining\minio_clientpy
+copy .\emotion_classification\serving\utils\minio_client.py .\emotion_classification\retraining\minio_client.py
 copy .\emotion_classification\serving\utils\face_detector.py .\emotion_classification\retraining\face_detector.py
 copy .\emotion_classification\serving\utils\logger.py .\emotion_classification\retraining\logger.py
 
