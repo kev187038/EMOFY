@@ -21,13 +21,13 @@ pipeline {
                     }
 
                     // Start Minikube
-                    bat minikubeCmd
+                    sh minikubeCmd
 
                     if (params.USE_GPU) {
                         // Enable GPU addons if USE_GPU is true
-                        bat "minikube addons enable nvidia-driver-installer"
-                        bat "minikube addons enable nvidia-gpu-device-plugin"
-                        bat "minikube addons enable nvidia-device-plugin"
+                        sh "minikube addons enable nvidia-driver-installer"
+                        sh "minikube addons enable nvidia-gpu-device-plugin"
+                        sh "minikube addons enable nvidia-device-plugin"
                     }
                 }
             }
