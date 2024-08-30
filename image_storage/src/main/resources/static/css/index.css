@@ -159,7 +159,12 @@ h2 a.btn-success:hover {
 
 #selected-image-container {
     padding-top: 40px; /* Adds space at the top of the container */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 
 /* Styles for the selected image */
 #selected-image {
@@ -167,6 +172,8 @@ h2 a.btn-success:hover {
     max-width: 60vw; /* Maximum width of the image */
     max-height: 60vh;
     object-fit: contain;
+    margin: 0 auto; /* Center the image horizontally */
+
 }
 
 @media (max-width: 768px) {

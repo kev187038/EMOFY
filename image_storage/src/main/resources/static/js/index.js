@@ -331,6 +331,9 @@ function displayImage(fileKey) {
         const selectedImageContainer = document.getElementById('selected-image-container');
         selectedImageContainer.style.display = 'block';
 
+        const imageLabelContainer = document.getElementById('image-label-container');
+        imageLabelContainer.style.display = 'block';
+
         const deleteImageButton = document.getElementById('delete-image-button');
         deleteImageButton.style.display = 'block';
 
