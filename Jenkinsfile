@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Base Minikube start command
-                    def minikubeCmd = "minikube start --nodes=${nodes}"
+                    def minikubeCmd = "minikube start  --nodes=${nodes}"
 
                     if (params.USE_GPU) {
                         // Add GPU-specific parameters if USE_GPU is true
@@ -32,7 +32,6 @@ pipeline {
                 }
             }
         }
-
         stage('deploy login service') {
             steps {
                 script {
@@ -73,31 +72,6 @@ pipeline {
             }
         }
 
-        stage('deploy model serving service')
-        {
-            steps {
-                script {
-                    dir('emotion_classification/serving') {
-                        sh 'kubectl create -f k8/login-credentials.yaml'
-                        sh 'kubectl create -f k8/minio-credentials.yaml'
-                        sh 'kubectl create -f k8/minio-model.yaml'
-                        sh 'kubectl create -f k8/deployment.yaml'
-                        sh 'kubectl create -f k8/service.yaml'
-                    }
-                }
-            }
-        }
-
-        stage('deploy retraining cronjob') {
-            steps {
-                script {
-                    dir('emotion_classification/retraining') {
-                        sh 'kubectl create -f k8/retrain-cron.yaml'
-                    }
-                }
-            }
-        }
-
         stage('deploy elk-stack')
         {
             steps {
@@ -113,7 +87,33 @@ pipeline {
                 }
             }
         }
+        stage('deploy emotion-classification service')
+        {
+            steps {
+                script {
+                    dir('emotion_classification/serving') {
 
+                        sh 'kubectl create -f k8/deployment.yaml'
+                        sh 'kubectl create -f k8/service.yaml'
+                        sh 'kubectl create -f k8/login-credentials.yaml'
+                        sh 'kubectl create -f k8/minio-credentials.yaml'
+                        sh 'kubectl create -f k8/minio-model.yaml'
+                        sh 'kubectl create -f k8/service-reader-role.yaml'
+                        sh 'kubectl create -f k8/service-reader-rolebinding.yaml'
+                    }
+                }
+            }
+        }
+                stage('deploy model retraining cron job')
+        {
+            steps {
+                script {
+                    dir('emotion_classification/retraining') {
+                        sh 'kubectl create -f k8/retrain-cron.yaml'
+                    }
+                }
+            }
+        }
         stage('Tunnel to localhost') {
             environment {
                 time_to_sleep = 30
@@ -138,7 +138,7 @@ pipeline {
                             sh 'nohup kubectl port-forward service/emofy-login-service 8085:8085 &'
                             sh 'nohup kubectl port-forward service/emofy-image-storage 8081:8081 &'
                             sh 'nohup kubectl port-forward service/image-filters-service 5000:5000 &'
-                            sh 'nohup kubectl port-forward service/emotion-detector-serivce 5050:5050 &'
+                            sh 'nohup kubectl port-forward service/emotion-detector-service 5050:5050 &'
                             sh 'nohup kubectl port-forward service/minio-console 9001:9001 &'
                             sh 'nohup kubectl port-forward service/kibana 5601:5601 &'
 		                }
