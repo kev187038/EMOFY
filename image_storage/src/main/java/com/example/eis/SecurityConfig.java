@@ -25,24 +25,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf()
+            .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-            .authorizeRequests()
-            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Consenti l'accesso a risorse statiche senza autenticazione
-            .anyRequest().authenticated()
-                .and()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Aggiungi il filtro JwtAuthenticationFilter prima di UsernamePasswordAuthenticationFilter
-            .logout()
+            )
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .logout(logout -> logout
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION_TOKEN")
                 .permitAll()
-            .and()
-            .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint);
+            )
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+            );
 
-            return http.build();
-            
+        return http.build();
     }
 }
