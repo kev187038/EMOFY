@@ -205,4 +205,4 @@ The project includes **declarative Jenkins pipelines** for fully automated deplo
 | **Auth** | OAuth2, Google OAuth2, JWT (24h expiry), Spring Security, CSRF |
 | **API Style** | REST / JSON, OpenAPI / Swagger |
 | **GPU Support** | NVIDIA CUDA, TensorRT (optional) |
-| **Build Tools** | Maven, pip, Docker Hub (`siralex01` namespace) |
+| **Build Tools** | Maven, pip, Docker
